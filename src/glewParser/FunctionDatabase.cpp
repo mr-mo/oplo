@@ -148,7 +148,7 @@ bool FunctionDatabase::handleAsApiFunctionPointer(std::string const& line)
 				}
 			);
 
-			assert(validator == 3);
+			assert(validator == 2);
 
 			std::shared_ptr<FunctionSignature> data = getFromFunctionTypedef(funcTypedefStr, true);
 		
@@ -193,7 +193,7 @@ bool FunctionDatabase::handleAsApiFunctionPointer(std::string const& line)
 						//no variable name given
 						if (remainingChars.empty())
 						{
-							char buf[8];
+							static char buf[128];
 							sprintf(buf, "undefined%i", i);
 							data->m_argumentNames.push_back(buf);
 						}
@@ -243,7 +243,7 @@ bool FunctionDatabase::handleAsFuncExport(std::string const& line)
 				);
 
 
-			if (validationCount != 3)
+			if (validationCount != 2)
 			{
 				std::cout << "Skipping delimited FUNCEXPORT due to invalid number of tokens: " << line << std::endl;
 				continue;
@@ -287,7 +287,7 @@ bool FunctionDatabase::handleAsGLDefine(std::string const& line)
 			);
 
 
-			if (validationCount != 4)
+			if (validationCount != 3)
 			{
 				std::cout << "Skipping delimited GL_DEFINE due to invalid number of tokens: " << line << std::endl;
 				continue;

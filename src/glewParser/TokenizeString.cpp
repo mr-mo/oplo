@@ -35,6 +35,11 @@ Delimiters::Delimiters()
 
 Delimiters::Delimiters(const char* delimiterList, int delimiterCount)
 {
+	m_tokens[0] = 0;
+	m_tokens[1] = 0;
+	m_tokens[2] = 0;
+	m_tokens[3] = 0;
+
 	for (int i = 0; i < delimiterCount; ++i)
 	{
 		addToken(delimiterList[i]);
