@@ -47,17 +47,7 @@ private:
 	unsigned long long m_tokens[4];
 };
 
-struct TokenizationReturn
-{
-	enum ReturnValue
-	{
-		CONTINUE,
-		EARLY_EXIT
-	};
-};
-
 //O(N) complexity on input
-//void tokenizeString(std::string const& input, Delimiters const& tokens, std::function<TokenizationReturn::ReturnValue(const std::string& input, std::size_t tokenNumber)> tokenizationFunc);
 void tokenizeString(std::string const& input, Delimiters const& tokens, std::function<void(const std::string& input, std::size_t tokenNumber)> tokenizationFunc);
 
 #endif

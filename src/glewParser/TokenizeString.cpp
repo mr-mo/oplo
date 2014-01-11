@@ -1,5 +1,4 @@
-/*
-The MIT License(MIT)
+/*The MIT License(MIT)
 
 Copyright(c) 2014 Erik Scorelle
 
@@ -19,8 +18,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
+THE SOFTWARE.*/
 
 #include "TokenizeString.h"
 
@@ -49,23 +47,54 @@ Delimiters::Delimiters(const char* delimiterList, int delimiterCount)
 
 void Delimiters::addToken(char token)
 {
-	int offset = token / 64;
-	int offsetedChar = token - (offset * 64);
+	//divide by 64
+	int offset = token >> 6;
+	int offsetedChar = token - (offset << 6);
 	m_tokens[offset] |= (1ll << offsetedChar);
 }
 
 void Delimiters::removeToken(char token)
 {
-	int offset = token / 64;
-	int offsetedChar = token - (offset * 64);
+	//divide by 64
+	int offset = token >> 6;
+	int offsetedChar = token - (offset << 6);
 	m_tokens[offset] &= ~(1ll << offsetedChar);
 }
 
 bool Delimiters::hasToken(char token) const
 {
-	int offset = token / 64;
-	int offsetedChar = token - (offset * 64);
+	int offset = token >> 6;
+	int offsetedChar = token - (offset << 6);
 	return (m_tokens[offset] & (1ll << offsetedChar)) != 0;
+}
+
+void tokenizeString(std::string const& input, Delimiters const& tokens, std::function<void(const std::string& input, std::size_t tokenNumber)> func)
+{
+	std::string tmp;
+	std::size_t tokenCount = 0;
+
+	for (std::size_t i = 0; i < input.size(); ++i)
+	{
+		if (tokens.hasToken(input[i]))
+		{
+			if (!tmp.empty())
+			{
+				func(tmp, tokenCount);
+				++tokenCount;
+			}
+
+			tmp.clear();
+		}
+		else
+		{
+			tmp.push_back(input[i]);
+		}
+	}
+
+	if (!tmp.empty())
+	{
+		func(tmp, tokenCount);
+	}
 }
 
 //void tokenizeString(std::string const& input, Delimiters const& tokens, std::function<TokenizationReturn::ReturnValue(const std::string& input, std::size_t tokenNumber)> func)
@@ -100,34 +129,4 @@ bool Delimiters::hasToken(char token) const
 //		func(tmp, tokenCount);
 //	}
 //}
-
-void tokenizeString(std::string const& input, Delimiters const& tokens, std::function<void(const std::string& input, std::size_t tokenNumber)> func)
-{
-	std::string tmp;
-	std::size_t tokenCount = 0;
-
-	for (std::size_t i = 0; i < input.size(); ++i)
-	{
-		if (tokens.hasToken(input[i]))
-		{
-			if (!tmp.empty())
-			{
-				func(tmp, tokenCount);
-				++tokenCount;
-			}
-
-			tmp.clear();
-		}
-		else
-		{
-			tmp.push_back(input[i]);
-		}
-	}
-
-	if (!tmp.empty())
-	{
-		func(tmp, tokenCount);
-	}
-}
-
 
