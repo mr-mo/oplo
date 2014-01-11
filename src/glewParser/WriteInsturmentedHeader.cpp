@@ -92,7 +92,7 @@ void WriteInsturmentedHeader::write(std::ostream& out, const FunctionDatabase& d
 				m_defaultPreCb(out, data);
 			}
 
-			out << data->m_functionPointer << "(";
+			out << "\t" << data->m_functionPointer << "(";
 
 			if (!data->m_argumentTypes.empty())
 			{
