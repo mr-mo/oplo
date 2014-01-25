@@ -1,0 +1,5 @@
+#ifndef STREAMING_TEXTURE_H
+#define STREAMING_TEXTURE_H
+
+
+#endif
