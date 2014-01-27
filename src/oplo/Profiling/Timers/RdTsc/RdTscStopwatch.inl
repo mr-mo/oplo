@@ -20,61 +20,53 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
+#include <intrin.h>
 
-#ifndef OPLO_RDTSC_TIMER_H
-#define OPLO_RDTSC_TIMER_H
-
-#include <stdint.h>
-
-//Strictly speaking not a timer
-//We do not try to associate ticks with time
-//Rather just use the ticks as a performance metric over a frame
-//To show inclusive/exclusive timings
-class RdTscStopwatch
+void RdTscStopwatch::start()
 {
-public:
+	m_start.m_result = poll();
+}
 
-	typedef int64_t ReturnType;
+void RdTscStopwatch::stop()
+{
+	m_stop.m_result = poll();
+}
 
-	RdTscStopwatch();
+int64_t RdTscStopwatch::runningDiff() const
+{
+	return poll() - m_start.m_result;
+}
 
-	inline void start();
+int64_t RdTscStopwatch::diff() const
+{
+	return m_stop.m_result - m_start.m_result;
+}
 
-	inline void stop();
 
-	inline int64_t runningDiff() const;
+inline void RdTscStopwatch::serialize()
+{
+	static int tmp[4];
+	__cpuid(tmp, 0);
+}
 
-	inline int64_t diff() const;
+int64_t RdTscStopwatch::poll()
+{
+#ifdef OPLO_X64
+	serialize();
+	return __rdtsc();
+#else
+	TicksUnion value;
 
-	inline static int64_t poll();
-
-	inline static void serialize(); 
-
-	static int64_t calculateSingleTimeOverhead();
-
-	static void calculateTscOverhead();
-
-	static int64_t getOverhead();
-
-private:
-
-	union TicksUnion
+	__asm
 	{
-		struct
-		{
-			int32_t m_lo, m_hi;
-		};
+		pushad
+		cpuid
+		rdtsc
+		mov value.m_lo, eax
+		mov value.m_hi, edx
+		popad
+	}
 
-		int64_t m_result;
-	};
-
-	static int64_t m_associatedOverhead;
-
-	TicksUnion m_start;
-	TicksUnion m_stop;
-};
-
-#include <Profiling/Timers/RdTsc/RdTscStopwatch.inl>
-
-
+	return value.m_result;
 #endif
+}

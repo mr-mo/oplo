@@ -1,5 +1,7 @@
 #include <Profiling/Timers/Chrono/ChronoStopwatch.h>
 #include <Profiling/Timers/RdTsc/RdTscStopwatch.h>
+#include <Profiling/Timers/RdTscp/RdTscpStopwatch.h>
+#include <Profiling/Timers/QPC/QPCStopwatch.h>
 #include <Profiling/CPUInformation.h>
 #include <Profiling/Containers/HashMap/HashMap.h>
 #include <RenderingUtilities/Math/Vector.h>
@@ -47,7 +49,6 @@ void approximateResolution(Func f, const int loopCounter = 1000000)
 	typedef typename std::result_of_t<Func()> dataType;
 	dataType* storage = new dataType[loopCounter];
 	__int64* diffs = new __int64[loopCounter];
-
 
 	RdTscStopwatch tsc;
 
@@ -136,7 +137,9 @@ int main()
 	HighResWatch highResWatch;
 	SteadyWatch steadyWatch;
 	RdTscStopwatch rdTsc;
-	RdTscStopwatch::calculateTscOverhead();
+	QPCStopwatch qpc;
+	RdTscpStopwatch rdTscp;
+
 
 	static const int totalIterations = 500000;
 
@@ -250,11 +253,19 @@ int main()
 		return _Xtime_get_ticks(); 
 	});
 	
-	approximateResolution<6>([&ft, &li]() { 
-			GetSystemTimeAsFileTime(&ft); 
-			li.HighPart = ft.dwHighDateTime;
-			li.LowPart = ft.dwLowDateTime;
-			return li.QuadPart;
+	approximateResolution<6>([&ft, &li]() {
+		GetSystemTimeAsFileTime(&ft);
+		li.HighPart = ft.dwHighDateTime;
+		li.LowPart = ft.dwLowDateTime;
+		return li.QuadPart;
+	});
+
+	approximateResolution<7>([&qpc]() {
+		return qpc.poll();
+	});
+
+	approximateResolution<8>([&rdTscp]() {
+		return rdTscp.poll();
 	});
 
 

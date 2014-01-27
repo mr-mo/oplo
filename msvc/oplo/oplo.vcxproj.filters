@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Camera">
+      <UniqueIdentifier>{0c1b054a-3254-457b-8054-57c4057d7bab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{30b8feb8-53f5-4e43-9293-626c560df775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling">
+      <UniqueIdentifier>{cd8c39e1-ed05-408d-8847-5d5fddbbfaf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling\Timers">
+      <UniqueIdentifier>{e765f590-7c05-4710-8568-a7dbe3037be9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling\Timers\Chrono">
+      <UniqueIdentifier>{7ed447cd-ddb2-4665-a7b8-12b21b17618f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling\Timers\QPC">
+      <UniqueIdentifier>{6ee93389-f569-4e13-9d11-2c125ae91c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling\Timers\RdTsc">
+      <UniqueIdentifier>{6d44ed2a-5b90-40b7-b8e7-b06b93fdfd7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling\Timers\RdTscp">
+      <UniqueIdentifier>{7e7a2a48-f39f-473f-be69-38c03080a7f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers">
+      <UniqueIdentifier>{682569ff-ef23-41cf-aead-4671fce53242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers\HashMap">
+      <UniqueIdentifier>{c4c82dad-f811-4fe8-875f-5d0a79287dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{45074d30-300e-4455-b517-94c64fc9075f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering\BasicStructures">
+      <UniqueIdentifier>{a9c0b993-3610-40f0-aaa2-139b0b714616}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering\Shaders">
+      <UniqueIdentifier>{9fb00301-36f7-4867-babc-fac9482c84dd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Camera\EulerCameraController.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Profiling\CPUInformation.cpp">
+      <Filter>Source Files\Profiling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.cpp">
+      <Filter>Source Files\Profiling\Timers\RdTsc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\BufferObject.cpp">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.cpp">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.cpp">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Shader.cpp">
+      <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.cpp">
+      <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\oplo\Camera\Camera.h">
+      <Filter>Source Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Camera\EulerCameraController.h">
+      <Filter>Source Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Math\AABB.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Math\Angle.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Math\Constants.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Math\Matrix.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Math\Plane.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Math\Quat.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Math\Vector.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\CPUInformation.h">
+      <Filter>Source Files\Profiling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Containers\HashMap\HashMap.h">
+      <Filter>Source Files\Containers\HashMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.h">
+      <Filter>Source Files\Profiling\Timers\Chrono</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTscp\RdTscpStopwatch.h">
+      <Filter>Source Files\Profiling\Timers\RdTscp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.h">
+      <Filter>Source Files\Profiling\Timers\RdTsc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.h">
+      <Filter>Source Files\Profiling\Timers\QPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\BufferObject.h">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.h">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.h">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Shader.h">
+      <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.h">
+      <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\oploGL.h">
+      <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.inl">
+      <Filter>Source Files\Profiling\Timers\Chrono</Filter>
+    </None>
+    <None Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.inl">
+      <Filter>Source Files\Profiling\Timers\RdTsc</Filter>
+    </None>
+  </ItemGroup>
+</Project>

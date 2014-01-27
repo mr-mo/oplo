@@ -83,7 +83,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)/../src</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPLO_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OPLO_X64;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -112,7 +112,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)/../src</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPLO_X64;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OPLO_X64;NOMINMAX;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -124,6 +124,8 @@
     <ClInclude Include="..\..\src\Profiling\Containers\HashMap\HashMap.h" />
     <ClInclude Include="..\..\src\Profiling\CPUInformation.h" />
     <ClInclude Include="..\..\src\Profiling\Timers\Chrono\ChronoStopwatch.h" />
+    <ClInclude Include="..\..\src\Profiling\Timers\QPC\QPCStopwatch.h" />
+    <ClInclude Include="..\..\src\Profiling\Timers\RdTscp\RdTscpStopwatch.h" />
     <ClInclude Include="..\..\src\Profiling\Timers\RdTsc\RdTscStopwatch.h" />
   </ItemGroup>
   <ItemGroup>

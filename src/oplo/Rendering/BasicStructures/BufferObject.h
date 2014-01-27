@@ -1,7 +1,7 @@
 #ifndef BUFFER_OBJECT_H
 #define BUFFER_OBJECT_H
 
-#include "Rendering/OpenGL.h"
+#include "Rendering/oploGL.h"
 #include <cassert>
 
 namespace opMo

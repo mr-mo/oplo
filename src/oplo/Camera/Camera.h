@@ -1,11 +1,11 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "RenderingUtilities/Math/Vector.h"
-#include "RenderingUtilities/Math/Plane.h"
-#include "RenderingUtilities/Math/Matrix.h"
-#include "RenderingUtilities/Math/Angle.h"
-#include "RenderingUtilities/Math/Quat.h"
+#include "Math/Vector.h"
+#include "Math/Plane.h"
+#include "Math/Matrix.h"
+#include "Math/Angle.h"
+#include "Math/Quat.h"
 
 namespace oplo
 {

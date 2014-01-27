@@ -1,8 +1,7 @@
 #ifndef GPU_FENCE_H
 #define GPU_FENCE_H
 
-#include "Engine/ExitCodes.h"
-#include "Rendering/OpenGL.h"
+#include "Rendering/oploGL.h"
 
 class GPUFence
 {
@@ -10,7 +9,7 @@ public:
 
 	GPUFence();
 
-	ExitCode createFence();
+	void createFence();
 
 	void reset();
 

@@ -4,10 +4,9 @@
 GPUFence::GPUFence() : m_fence(0)
 {}
 
-ExitCode GPUFence::createFence()
+void GPUFence::createFence()
 {
-	if (m_fence)
-		return ExitCode::FAILURE;
+#pragma message("TODO: log error")
 
 	m_fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 }

@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0C5D681F-9BDD-4D2F-A6FA-B21F5D87E51C}</ProjectGuid>
-    <RootNamespace>TestProject</RootNamespace>
+    <ProjectGuid>{5538CD74-C4FE-4FFD-8ECC-26C522E1ED6F}</ProjectGuid>
+    <RootNamespace>oplo</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,12 +71,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;C:\Dev\ThirdParty\glew-1.10.0\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>profiling.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -84,13 +83,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPLO_X64;NOMINMAX;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;C:\Dev\ThirdParty\glew-1.10.0\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;OPLO_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>profiling.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -100,14 +97,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;C:\Dev\ThirdParty\glew-1.10.0\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>profiling.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -117,19 +113,52 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>OPLO_X64;NOMINMAX;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;C:\Dev\ThirdParty\glew-1.10.0\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;OPLO_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>profiling.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\samples\TestProject\Main.cpp" />
+    <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp" />
+    <ClCompile Include="..\..\src\oplo\Camera\EulerCameraController.cpp" />
+    <ClCompile Include="..\..\src\oplo\Profiling\CPUInformation.cpp" />
+    <ClCompile Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\BufferObject.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Shader.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\oplo\Camera\Camera.h" />
+    <ClInclude Include="..\..\src\oplo\Camera\EulerCameraController.h" />
+    <ClInclude Include="..\..\src\oplo\Containers\HashMap\HashMap.h" />
+    <ClInclude Include="..\..\src\oplo\Math\AABB.h" />
+    <ClInclude Include="..\..\src\oplo\Math\Angle.h" />
+    <ClInclude Include="..\..\src\oplo\Math\Constants.h" />
+    <ClInclude Include="..\..\src\oplo\Math\Matrix.h" />
+    <ClInclude Include="..\..\src\oplo\Math\Plane.h" />
+    <ClInclude Include="..\..\src\oplo\Math\Quat.h" />
+    <ClInclude Include="..\..\src\oplo\Math\Vector.h" />
+    <ClInclude Include="..\..\src\oplo\Profiling\CPUInformation.h" />
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.h" />
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.h" />
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTscp\RdTscpStopwatch.h" />
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\BufferObject.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\oploGL.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Shader.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.inl" />
+    <None Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

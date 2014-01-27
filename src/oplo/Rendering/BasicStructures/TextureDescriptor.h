@@ -1,7 +1,7 @@
 #ifndef TEXTURE_DESCRIPTOR_H
 #define TEXTURE_DESCRIPTOR_H
 
-#include "Rendering/OpenGL.h"
+#include "Rendering/oploGL.h"
 
 class BufferObject;
 class TextureDescriptor

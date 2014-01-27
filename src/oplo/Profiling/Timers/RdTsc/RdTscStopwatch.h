@@ -20,55 +20,53 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
-#ifdef OPLO_X64
-#include <intrin.h>
-#endif
 
-void RdTscStopwatch::start()
+#ifndef OPLO_RDTSC_TIMER_H
+#define OPLO_RDTSC_TIMER_H
+
+#include <stdint.h>
+
+//Strictly speaking not a timer
+//We do not try to associate ticks with time
+//Rather just use the ticks as a performance metric over a frame
+//To show inclusive/exclusive timings
+class RdTscStopwatch
 {
-	m_start.m_result = poll();
-}
+public:
 
-void RdTscStopwatch::stop()
-{
-	m_stop.m_result = poll();
-}
+	typedef int64_t ReturnType;
 
-int64_t RdTscStopwatch::runningDiff() const
-{
-	return poll() - m_start.m_result;
-}
+	RdTscStopwatch();
 
-int64_t RdTscStopwatch::diff() const
-{
-	return m_stop.m_result - m_start.m_result;
-}
+	inline void start();
 
+	inline void stop();
 
-inline void RdTscStopwatch::serialize()
-{
-	static int tmp[4];
-	__cpuid(tmp, 0);
-}
+	inline int64_t runningDiff() const;
 
-int64_t RdTscStopwatch::poll()
-{
-#ifdef OPLO_X64
-	serialize();
-	return __rdtsc();
-#else
-	TicksUnion value;
+	inline int64_t diff() const;
 
-	__asm
+	inline static int64_t poll();
+
+	inline static void serialize(); 
+
+private:
+
+	union TicksUnion
 	{
-		pushad
-		cpuid
-		rdtsc
-		mov value.m_lo, eax
-		mov value.m_hi, edx
-		popad
-	}
+		struct
+		{
+			int32_t m_lo, m_hi;
+		};
 
-	return value.m_result;
+		int64_t m_result;
+	};
+
+	TicksUnion m_start;
+	TicksUnion m_stop;
+};
+
+#include <Profiling/Timers/RdTsc/RdTscStopwatch.inl>
+
+
 #endif
-}

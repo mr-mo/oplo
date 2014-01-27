@@ -22,66 +22,9 @@ THE SOFTWARE.*/
 
 #include <Profiling/Timers/RdTsc/RdTscStopwatch.h>
 
-#ifdef OPLO_X64
-#include <intrin.h>
-#endif
 
 RdTscStopwatch::RdTscStopwatch()
 {
 	m_start.m_result = 0;
 	m_stop.m_result = 0;
 }
-
-int64_t RdTscStopwatch::calculateSingleTimeOverhead()
-{
-	TicksUnion value;
-#ifdef OPLO_X64
-	__int64 x0 = poll();
-	__int64 x1 = poll();
-	return x1 - x0;
-#else
-	__asm
-	{
-		pushad
-		cpuid
-		rdtsc
-		mov value.m_lo, eax
-		mov value.m_hi, edx
-		popad
-
-		pushad
-		cpuid
-		rdtsc
-		sub eax, value.m_lo
-		mov value.m_lo, eax
-		popad
-	}
-#endif
-
-	return value.m_result;
-}
-
-void RdTscStopwatch::calculateTscOverhead()
-{
-	__int64 times[10];
-	for (int i = 0; i < 10; ++i)
-	{
-		times[i] = calculateSingleTimeOverhead();
-	}
-
-	m_associatedOverhead = 0;
-
-	for (int i = 0; i < 10; ++i)
-	{
-		m_associatedOverhead += times[i];
-	}
-
-	m_associatedOverhead /= 10;
-}
-
-int64_t RdTscStopwatch::getOverhead()
-{
-	return m_associatedOverhead;
-}
-
-int64_t RdTscStopwatch::m_associatedOverhead = 0;
