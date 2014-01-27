@@ -4,7 +4,7 @@
 #include "Rendering/oploGL.h"
 #include <cassert>
 
-namespace opMo
+namespace oplo
 {
 
 class BufferObject

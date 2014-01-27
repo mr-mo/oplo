@@ -45,13 +45,13 @@ namespace oplo
 
 		if (id_)
 		{
-			opMo::DebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, id_, GL_DEBUG_SEVERITY_MEDIUM, -1, "Trying to compile a shader that has already been compiled");
+			glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, id_, GL_DEBUG_SEVERITY_MEDIUM, -1, "Trying to compile a shader that has already been compiled");
 			return;
 		}
 
 		target_ = target;
 		id_ = glCreateShader(target_);
-		opMo::ObjectLabel(GL_SHADER, id_, -1, label);
+		glObjectLabel(GL_SHADER, id_, -1, label);
 	}
 
 	bool Shader::Recompile()
@@ -73,7 +73,7 @@ namespace oplo
 	{
 		if (!id_)
 		{
-			opMo::DebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0, GL_DEBUG_SEVERITY_MEDIUM, -1, "Trying to compile a shader before creating it");
+			glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0, GL_DEBUG_SEVERITY_MEDIUM, -1, "Trying to compile a shader before creating it");
 			return false;
 		}
 
@@ -324,7 +324,7 @@ namespace oplo
 
 		program_ = glCreateProgram();
 
-		opMo::ObjectLabel(GL_PROGRAM, program_, -1, m_name.c_str());
+		glObjectLabel(GL_PROGRAM, program_, -1, m_name.c_str());
 
 		for (unsigned i = 0; i < shaders_.size(); ++i)
 		{

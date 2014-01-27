@@ -3,24 +3,28 @@
 
 #include "Rendering/oploGL.h"
 
-class GPUFence
+namespace oplo
 {
-public:
 
-	GPUFence();
+	class GPUFence
+	{
+	public:
 
-	void createFence();
+		GPUFence();
 
-	void reset();
+		void createFence();
 
-	void destroy();
+		void reset();
 
-	GLenum wait(unsigned nano);
+		void destroy();
 
-private:
+		GLenum wait(unsigned nano);
 
-	GLsync m_fence;
-};
+	private:
 
+		GLsync m_fence;
+	};
+
+}
 
 #endif

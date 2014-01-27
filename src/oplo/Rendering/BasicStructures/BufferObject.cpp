@@ -2,7 +2,7 @@
 #include <cassert>
 #include "Rendering/Debug/RenderingDebugOutput.h"
 
-namespace opMo
+namespace oplo
 {
 
 BufferObject::BufferObject() : m_immutable(false), m_id(0), m_pointer(0)
@@ -36,11 +36,11 @@ void BufferObject::allocate(
 		
 		if (label)
 		{
-			opMo::ObjectLabel(GL_BUFFER, m_id, -1, label);
+			glObjectLabel(GL_BUFFER, m_id, -1, label);
 		}
 		else
 		{
-			opMo::ObjectLabel(GL_BUFFER, m_id, -1, "Unnamed Buffer");
+			glObjectLabel(GL_BUFFER, m_id, -1, "Unnamed Buffer");
 		}
 	}
 

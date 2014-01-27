@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Rendering\Shaders">
       <UniqueIdentifier>{9fb00301-36f7-4867-babc-fac9482c84dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Rendering\Debug">
+      <UniqueIdentifier>{8c3e417e-1620-47ec-be91-686a099b554e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp">
@@ -80,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.cpp">
       <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.cpp">
+      <Filter>Source Files\Rendering\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\Rendering\oploGL.h">
       <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.h">
+      <Filter>Source Files\Rendering\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
