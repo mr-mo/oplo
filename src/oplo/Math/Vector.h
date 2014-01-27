@@ -122,8 +122,11 @@
 		}
 
 		Vector( const self_t& rhs ) 
-		{ 
-			std::copy( rhs.begin(), rhs.end(), begin() ); 
+		{
+			for (int i = 0; i < Sz; ++i)
+			{
+				m_data[i] = rhs[i];
+			}
 		}
 
 		~Vector()
@@ -131,10 +134,9 @@
 
 		self_t& operator=( const self_t& rhs )
 		{
-			if( this != &rhs )
+			for (int i = 0; i < Sz; ++i)
 			{
-				self_t tmp( rhs );
-				tmp.swap( *this );
+				m_data[i] = rhs[i];
 			}
 
 			return *this;
@@ -168,14 +170,10 @@
 		const_pointer_type begin() const					{ return m_data; }
 		const_pointer_type end() const						{ return m_data + Sz; }
 
-		void swap( self_t& rhs )	
-		{ 
-			std::swap_ranges( begin(), end(), rhs.begin() ); 
-		}
-
 		unsigned size() const		
 		{ 
-			return Sz; }
+			return Sz; 
+		}
 
 
 		void setZero()

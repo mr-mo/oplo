@@ -13,11 +13,6 @@ namespace oplo
 
 	}
 
-	Camera& Camera::operator=(const Camera& rhs)
-	{
-
-	}
-
 	Camera::ClippingResult Camera::ClipSphere(Vec3D const& worldPosition, double worldRadius) const
 	{
 		double d = 0.0;

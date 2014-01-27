@@ -54,15 +54,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Properties\opengl.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Properties\opengl.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Properties\opengl.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Properties\opengl.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -108,12 +112,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;C:\Dev\ThirdParty\glew-1.10.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;OPLO_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -133,6 +137,7 @@
     <ClCompile Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Shader.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\oplo\Camera\Camera.h" />
@@ -157,6 +162,7 @@
     <ClInclude Include="..\..\src\oplo\Rendering\oploGL.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Shader.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.inl" />
