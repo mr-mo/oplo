@@ -3,13 +3,10 @@
 #include <Profiling/Timers/RdTscp/RdTscpStopwatch.h>
 #include <Profiling/Timers/QPC/QPCStopwatch.h>
 #include <Profiling/CPUInformation.h>
-#include <Profiling/Containers/HashMap/HashMap.h>
-#include <RenderingUtilities/Math/Vector.h>
+#include <Containers/HashMap/HashMap.h>
+#include <Math/Vector.h>
 #include <iostream>
 #include <unordered_map>
-
-#define NOMINMAX
-#include <Windows.h>
 
 void printValues(const __int64* diff, const int loopCounter)
 {

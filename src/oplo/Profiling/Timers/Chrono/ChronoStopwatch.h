@@ -42,7 +42,7 @@ public:
 
 	inline ReturnType diff() const;
 
-	inline static ReturnType poll() const;
+	inline static ReturnType poll();
 
 private:
 

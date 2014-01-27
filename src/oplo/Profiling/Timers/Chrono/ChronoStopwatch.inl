@@ -28,7 +28,7 @@ typename ChonoStopwatch<ClockType, OutputPrecision>::ReturnType ChonoStopwatch<C
 }
 
 template<typename ClockType, typename OutputPrecision>
-typename ChonoStopwatch<ClockType, OutputPrecision>::ReturnType ChonoStopwatch<ClockType, OutputPrecision>::poll() const
+typename ChonoStopwatch<ClockType, OutputPrecision>::ReturnType ChonoStopwatch<ClockType, OutputPrecision>::poll()
 {
 	return std::chrono::duration_cast<OutputPrecision>(ClockType::now().time_since_epoch()).count();
 }
