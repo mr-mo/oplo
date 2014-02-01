@@ -29,10 +29,7 @@ public:
 
 	Matrix4(const SelfType& rhs)
 	{
-		for (int i = 0; i < 16; ++i)
-		{
-			m_data[0] = rhs[0];
-		}
+		memcpy(m_data, rhs.m_data, sizeof(Precision)* 16);
 	}
 
 	Matrix4(const value_type* rhs)
@@ -120,7 +117,7 @@ public:
 	SelfType& operator*=( SelfType const& rhs )
 	{
 		SelfType m( *this );
-		MakeIdentity( value_type( 0 ) );
+		makeIdentity( value_type( 0 ) );
 
 		for( unsigned i = 0; i < 4; ++i )
 		{
@@ -138,22 +135,22 @@ public:
 
 	pointer_type begin()
 	{
-		return OneDim_;
+		return m_data;
 	}
 
 	pointer_type end()
 	{
-		return OneDim_ + 16;
+		return m_data + 16;
 	}
 
 	const_pointer_type begin() const
 	{
-		return OneDim_;
+		return m_data;
 	}
 
 	const_pointer_type end() const
 	{
-		return OneDim_ + 16;
+		return m_data + 16;
 	}
 
 	void setZero()
@@ -345,7 +342,7 @@ private:
 template< typename T >
 Matrix4< T > operator*(const Matrix4< T >& rhs, const Matrix4< T >& lhs)
 {
-	AffineMatrix< T > m( rhs );
+	Matrix4< T > m(rhs);
 	m *= lhs;
 	return m;
 }

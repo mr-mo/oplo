@@ -8,6 +8,7 @@
 #include <Camera/Camera.h>
 #include <Camera/EulerCameraController.h>
 #include <Rendering\Debug\RenderingDebugOutput.h>
+#include <Rendering/Shaders/UniformHandler.h>
 
 namespace oplo
 {
@@ -42,6 +43,8 @@ public:
 
 	virtual void draw() = 0;
 
+	virtual void shutdown();
+
 protected:
 
 	Anglef m_globalLightDirection;
@@ -59,6 +62,8 @@ protected:
 	int m_mx, m_my;
 
 	float m_motionSpeed;
+
+	oplo::UniformHandler m_uniforms;
 
 	RenderingDebugOutput m_debugOutput;
 

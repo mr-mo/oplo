@@ -60,6 +60,13 @@ namespace oplo
 
 		m_cameraController.updateCamera();
 
+		const oplo::Matrix4<float>& proj = m_camera.GetProjectionMatrix();
+		const oplo::Matrix4<float>& cam = m_camera.GetViewMatrix();
+
+		Matrix4<float> mvp = proj * cam;
+
+		m_uniforms.setUniform("modelviewProjection", mvp.begin(), 16);
+
 		//elevationPage.beginFrame(camera);
 		//cameraController.UpdateCamera();
 		//float cosLight = cos(fLightAngle * 3.1415928f / 180.f);
@@ -164,13 +171,14 @@ namespace oplo
 			//case 'y':
 			//	statRenderer.increaseSecondaryIndex();
 			//	break;
-			//case 'k':
-			//	Engine::staticGet<UniformHandler>().Recompile();
-			//	break;
+		case 'k':
+			m_uniforms.recompile();
+			break;
 		case 'q':
 			m_reversing = !m_reversing;
 			break;
 		case 27:
+			shutdown();
 			exit(-1);
 		default:
 			break;
@@ -218,4 +226,8 @@ namespace oplo
 		glutPostRedisplay();
 	}
 
+	void GlutApp::shutdown()
+	{
+
+	}
 }

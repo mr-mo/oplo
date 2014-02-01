@@ -30,4 +30,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\data\shaders\InstancingTest.glsl">
+      <Filter>Shaders</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

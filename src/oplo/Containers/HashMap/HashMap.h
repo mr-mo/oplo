@@ -3,10 +3,12 @@
 
 #include <functional>
 
-template<typename T>
+template<class T, class HF = std::hash<T> >
 struct QuadraticHashParameters
 {
-	std::hash<T> hasher;
+	typedef T value_type;
+
+	HF hasher;
 
 	const std::size_t hash(T const& key) const
 	{
@@ -41,12 +43,45 @@ struct QuadraticHashParameters
 	}
 };
 
+template<class HashParameters >
+struct StringParameters
+{
+	typedef typename HashParameters::value_type value_type;
+	HashParameters hasher;
+
+	const std::size_t hash(value_type const& key) const
+	{
+		return hasher.hash(key);
+	}
+
+	const std::size_t probe(std::size_t idx, std::size_t iter) const
+	{
+		return hasher.probe(idx, iter);
+	}
+
+	bool equals(value_type const& lhs, value_type const& rhs) const
+	{
+		return hasher.equals(lhs, rhs);
+	}
+
+	bool isValidKey(value_type const& v) const
+	{
+		return !hasher.equals(v, value_type(""));
+	}
+
+	bool shouldResize(std::size_t residency, std::size_t tableSize) const
+	{
+		return hasher.shouldResize(residency, tableSize);
+	}
+};
+
+
 
 template<
 	typename KeyType,
-	typename ValueType, 
+	typename ValueType,
 	typename HashParameters = QuadraticHashParameters<KeyType>
-	>
+>
 struct DenseHashMap
 {
 	typedef std::pair<KeyType, ValueType> PairType;
@@ -54,23 +89,37 @@ struct DenseHashMap
 	typedef const ValueType& ValueArgument;
 	typedef PairType* Iterator;
 
-	DenseHashMap( std::size_t initialAllocation = 32 ) :
-		m_data(0), 
+	DenseHashMap(std::size_t initialAllocation = 32) :
+		m_data(0),
 		m_residency(0),
 		m_tableSize(initialAllocation)
 	{
 		if (initialAllocation > 0)
 		{
 			m_data = new PairType[m_tableSize];
-			memset(m_data, 0, sizeof(PairType) * m_tableSize);
+			memset(m_data, 0, sizeof(PairType)* m_tableSize);
 		}
 	}
 
 	void compress()
-	{	
+	{
 		assert(m_dataMulticand > 1);
 		assert(m_data);
 		rehash(m_tableSize >> 1);
+	}
+
+	void clear(std::size_t allocationRemaining = 32)
+	{
+		delete[] m_data;
+		m_data = 0;
+		m_tableSize = allocationRemaining;
+		m_residency = 0;
+		
+		if (allocationRemaining > 0)
+		{
+			m_data = new PairType[allocationRemaining];
+			memset(m_data, 0, sizeof(PairType)* m_tableSize);
+		}
 	}
 
 	const Iterator find(KeyArgument key) const
@@ -96,12 +145,36 @@ struct DenseHashMap
 		return end();
 	}
 
+	const Iterator begin() const
+	{
+		Iterator i = m_data;
+
+		while (!m_params.isValidKey(i->first) && i != end())
+		{
+			++i;
+		}
+
+		return i;
+	}
+
+	const Iterator next(Iterator i) const
+	{
+		++i;
+
+		while (!m_params.isValidKey(i->first) && i != end())
+		{
+			++i;
+		}
+
+		return i;
+	}
+
 	const Iterator end() const
 	{
 		return m_data + m_tableSize;
 	}
 
-	const ValueArgument value( const Iterator itr ) const
+	const ValueArgument value(const Iterator itr) const
 	{
 		return itr->second;
 	}
@@ -137,11 +210,12 @@ struct DenseHashMap
 			}
 		}
 
+		return false;
 	}
 
 private:
 
-	void rehash( std::size_t newTableSize )
+	void rehash(std::size_t newTableSize)
 	{
 		PairType* tmp = m_data;
 
@@ -172,6 +246,5 @@ private:
 
 	PairType* m_data;
 };
-
 
 #endif

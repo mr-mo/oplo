@@ -135,7 +135,9 @@
     <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Program.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Shader.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Uniform.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.cpp" />
   </ItemGroup>
@@ -160,7 +162,9 @@
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\oploGL.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Program.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Shader.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Uniform.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.h" />
   </ItemGroup>

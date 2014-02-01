@@ -1,111 +1,93 @@
 #include "UniformHandler.h"
-#include "Shader.h"
+#include "Program.h"
 #include "Math/Vector.h"
 
 namespace oplo
 {
 
-	UniformHandler::UniformHandler() : cRegisteredPrograms_(3, [](std::shared_ptr<Program> p) { return reinterpret_cast<std::size_t>(p.get()); })
+	UniformHandler::UniformHandler() : m_programs(3, [](std::shared_ptr<Program> p) { return reinterpret_cast<std::size_t>(p.get()); })
 	{}
 
 	UniformHandler::~UniformHandler()
 	{}
 
-	void UniformHandler::Recompile()
+	void UniformHandler::recompile()
 	{
-		mUniforms_.clear();
+		destroyUniformRegistry();
 
-		for (SetType::iterator itr = cRegisteredPrograms_.begin(); itr != cRegisteredPrograms_.end(); ++itr)
+		for (auto s : m_programs)
 		{
-			(*itr)->Recompile();
-
-			for (int i = 0; i < (*itr)->TotalUniforms(); ++i)
-				mUniforms_[(*itr)->UniformName(i)].push_back(*itr);
+			s->compile();
+			addProgramUniformsToHash(*s);
 		}
 	}
 
-	void UniformHandler::RegisterShader(std::shared_ptr< Program > pProgram)
+	void UniformHandler::registerShader(std::shared_ptr< Program > program)
 	{
-		cRegisteredPrograms_.insert(pProgram);
-
-		for (int i = 0; i < pProgram->TotalUniforms(); ++i)
-			mUniforms_[pProgram->UniformName(i)].push_back(pProgram);
+		if (m_programs.insert(program).second)
+		{
+			addProgramUniformsToHash(*program);
+		}
 	}
 
-	void UniformHandler::SetUniform(const std::string& sUniformName, float fValue)
+	void UniformHandler::setUniform(const std::string& uni, float v)
 	{
-		MapType::iterator itr = mUniforms_.find(sUniformName);
+		setUniform(uni, reinterpret_cast<const char*>(&v), sizeof(float));
+	}
 
-		if (itr != mUniforms_.end())
+	void UniformHandler::setUniform(const std::string& uni, const float* v, unsigned sz)
+	{
+		setUniform(uni, reinterpret_cast<const char*>(v), sz * sizeof(float));
+	}
+
+	void UniformHandler::setUniform(const std::string& uni, const char* v, unsigned sz)
+	{
+		HashMap::Iterator itr = m_uniforms.find(uni);
+
+		if (itr != m_uniforms.end())
 		{
-			for (ProgramVector::iterator vitr = itr->second.begin(); vitr != itr->second.end(); ++vitr)
+			for (auto s : *(*itr).second)
 			{
-				(*vitr)->SetUniform(sUniformName, &fValue, 1);
+				s->setUniform(uni, v, sz);
 			}
 		}
 	}
 
-	void UniformHandler::SetUniform(const std::string& sUniformName, float fValue0, float fValue1)
+	void UniformHandler::destroyUniformRegistry()
 	{
-		MapType::iterator itr = mUniforms_.find(sUniformName);
+		HashMap::Iterator i = m_uniforms.begin();
 
-		Vec2F v(fValue0, fValue1);
-
-		if (itr != mUniforms_.end())
+		while (i != m_uniforms.end())
 		{
-			for (ProgramVector::iterator vitr = itr->second.begin(); vitr != itr->second.end(); ++vitr)
-			{
-				(*vitr)->SetUniform(sUniformName, &v[0], 2);
-			}
+			delete i->second;
+			i = m_uniforms.next(i);
 		}
+
+		m_uniforms.clear();
 	}
 
-	void UniformHandler::SetUniform(const std::string& sUniformName, float fValue0, float fValue1, float fValue2)
+	void UniformHandler::clearProgramRegistery()
 	{
-		MapType::iterator itr = mUniforms_.find(sUniformName);
-
-		Vec3F v(fValue0, fValue1, fValue2);
-
-		if (itr != mUniforms_.end())
-		{
-			for (ProgramVector::iterator vitr = itr->second.begin(); vitr != itr->second.end(); ++vitr)
-			{
-				(*vitr)->SetUniform(sUniformName, &v[0], 3);
-			}
-		}
+		m_programs.clear();
 	}
 
-	void UniformHandler::SetUniform(const std::string& sUniformName, float fValue0, float fValue1, float fValue2, float fValue3)
+	void UniformHandler::addProgramUniformsToHash(Program& p)
 	{
-		MapType::iterator itr = mUniforms_.find(sUniformName);
-
-		Vec4F v(fValue0, fValue1, fValue2, fValue3);
-
-		if (itr != mUniforms_.end())
+		for (int i = 0; i < p.getTotalUniforms(); ++i)
 		{
-			for (ProgramVector::iterator vitr = itr->second.begin(); vitr != itr->second.end(); ++vitr)
+			std::string uniform = p.getUniformName(i);
+
+			const HashMap::Iterator itr = m_uniforms.find(uniform);
+
+			if (itr != m_uniforms.end())
 			{
-				(*vitr)->SetUniform(sUniformName, &v[0], 4);
+				itr->second->push_back(&p);
 			}
-		}
-	}
-
-	void UniformHandler::SetUniform(const std::string& sUniformName, const float* pValue, unsigned uSize, bool bIsMatrix)
-	{
-		MapType::iterator itr = mUniforms_.find(sUniformName);
-
-		if (itr != mUniforms_.end())
-		{
-			for (ProgramVector::iterator vitr = itr->second.begin(); vitr != itr->second.end(); ++vitr)
+			else
 			{
-				if (bIsMatrix)
-				{
-					(*vitr)->SetUniformMatrix(sUniformName, pValue, uSize);
-				}
-				else
-				{
-					(*vitr)->SetUniform(sUniformName, pValue, uSize);
-				}
+				ProgramVector* vec = new ProgramVector;
+				vec->push_back(&p);
+				m_uniforms.insert(uniform, vec);
 			}
 		}
 	}

@@ -142,6 +142,9 @@
   <ItemGroup>
     <ClInclude Include="GlutApp.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\data\shaders\InstancingTest.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

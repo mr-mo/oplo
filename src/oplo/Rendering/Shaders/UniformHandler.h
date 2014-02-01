@@ -1,16 +1,17 @@
-#ifndef ERIK_PGRID_UNIFORM_HANDLER_H
-#define ERIK_PGRID_UNIFORM_HANDLER_H
+#ifndef OPLO_UNIFORM_HANDLER_H
+#define OPLO_UNIFORM_HANDLER_H
 
 #include <unordered_set>
-#include <unordered_map>
 #include <memory>
 #include <string>
 #include <vector>
 #include <functional>
 
+#include "Containers/HashMap/HashMap.h"
+#include "Math/Vector.h"
+
 namespace oplo
 {
-
 	class Program;
 
 	class UniformHandler
@@ -21,33 +22,40 @@ namespace oplo
 
 		~UniformHandler();
 
-		void Recompile();
+		void recompile();
 
-		void RegisterShader(std::shared_ptr< Program > pProgram);
+		void registerShader(std::shared_ptr< Program > program);
 
-		void SetUniform(const std::string& sUniformName, float fValue);
+		void setUniform(const std::string& uni, float v);
 
-		void SetUniform(const std::string& sUniformName, float fValue0, float fValue1);
+		template<typename T, unsigned sz>
+		void setUniform(const std::string& uni, Vector<T, sz> const& v)
+		{
+			setUniform(uni, reinterpret_cast<const char*>(v.begin()), sizeof(T)* sz);
+		}
 
-		void SetUniform(const std::string& sUniformName, float fValue0, float fValue1, float fValue2);
+		void setUniform(const std::string& uni, const float* v, unsigned sz);
 
-		void SetUniform(const std::string& sUniformName, float fValue0, float fValue1, float fValue2, float fValue3);
+		void setUniform(const std::string& uni, const char* v, unsigned sz);
 
-		void SetUniform(const std::string& sUniformName, const float* pValue, unsigned uSize, bool bIsMatrix = false);
+		void destroyUniformRegistry();
 
-		void Destroy();
+		void clearProgramRegistery();
 
 	private:
 
-		typedef std::vector< std::shared_ptr< Program > > ProgramVector;
+		void addProgramUniformsToHash(Program& p);
 
-		typedef std::unordered_map< std::string, ProgramVector > MapType;
+		//memory owned by set, no need to keep two shared pointers
+		typedef std::vector< Program* > ProgramVector;
+
+		typedef DenseHashMap< std::string, ProgramVector*, StringParameters<QuadraticHashParameters<std::string> > > HashMap;
 
 		typedef std::unordered_set< std::shared_ptr< Program >, std::function<std::size_t(std::shared_ptr<Program>)> > SetType;
 
-		MapType mUniforms_;
+		HashMap m_uniforms;
 
-		SetType cRegisteredPrograms_;
+		SetType m_programs;
 	};
 
 }

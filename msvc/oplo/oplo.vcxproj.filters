@@ -58,6 +58,15 @@
     <Filter Include="Source Files\Rendering\Shapes">
       <UniqueIdentifier>{a65c53c6-be1d-4df7-ab91-2ea1fab80e0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Containers\LinearOctree">
+      <UniqueIdentifier>{47dd342c-d4d0-42e5-8211-460c76282f46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers\RTree">
+      <UniqueIdentifier>{6b839ee8-14ad-469e-84d4-6931e3453ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers\LinearQuadtree">
+      <UniqueIdentifier>{e921f4a2-9e6f-4434-84a9-e4ce5c5f46d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp">
@@ -92,6 +101,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.cpp">
       <Filter>Source Files\Rendering\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Program.cpp">
+      <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Uniform.cpp">
+      <Filter>Source Files\Rendering\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.h">
       <Filter>Source Files\Rendering\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Program.h">
+      <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Uniform.h">
+      <Filter>Source Files\Rendering\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

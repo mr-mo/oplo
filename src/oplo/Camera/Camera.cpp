@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "Rendering/oploGL.h"
+
 namespace oplo
 {
 
