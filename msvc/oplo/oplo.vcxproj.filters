@@ -67,6 +67,12 @@
     <Filter Include="Source Files\Containers\LinearQuadtree">
       <UniqueIdentifier>{e921f4a2-9e6f-4434-84a9-e4ce5c5f46d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\DataFormats">
+      <UniqueIdentifier>{d8b70d4c-ed83-4df7-bc54-4ad218f294d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataFormats\LAS">
+      <UniqueIdentifier>{7ca1ebac-fc2e-4a0d-8621-e5541b1d93d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp">
@@ -107,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Uniform.cpp">
       <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\DataFormats\LAS\LAS.cpp">
+      <Filter>Source Files\DataFormats\LAS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +193,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Uniform.h">
       <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\DataFormats\LAS\LASStructures.h">
+      <Filter>Source Files\DataFormats\LAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\DataFormats\LAS\LAS.h">
+      <Filter>Source Files\DataFormats\LAS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

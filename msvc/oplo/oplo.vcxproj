@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp" />
     <ClCompile Include="..\..\src\oplo\Camera\EulerCameraController.cpp" />
+    <ClCompile Include="..\..\src\oplo\DataFormats\LAS\LAS.cpp" />
     <ClCompile Include="..\..\src\oplo\Profiling\CPUInformation.cpp" />
     <ClCompile Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\BufferObject.cpp" />
@@ -145,6 +146,8 @@
     <ClInclude Include="..\..\src\oplo\Camera\Camera.h" />
     <ClInclude Include="..\..\src\oplo\Camera\EulerCameraController.h" />
     <ClInclude Include="..\..\src\oplo\Containers\HashMap\HashMap.h" />
+    <ClInclude Include="..\..\src\oplo\DataFormats\LAS\LAS.h" />
+    <ClInclude Include="..\..\src\oplo\DataFormats\LAS\LASStructures.h" />
     <ClInclude Include="..\..\src\oplo\Math\AABB.h" />
     <ClInclude Include="..\..\src\oplo\Math\Angle.h" />
     <ClInclude Include="..\..\src\oplo\Math\Constants.h" />
