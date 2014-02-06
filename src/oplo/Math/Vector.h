@@ -6,6 +6,8 @@
 #include <sstream>
 #include <cmath>
 
+#include "Constants.h"
+
 	namespace oplo
 	{
 
@@ -146,7 +148,7 @@
 		{
 			for( unsigned i = 0; i < Sz; ++i )
 			{
-				if( data_[i] != rhs[i] ) 
+				if( m_data[i] != rhs[i] ) 
 					return true;
 			}
 
@@ -286,19 +288,19 @@
 			return dot( rhs ); 
 		}
 
-		value_type lengthSqrd()  const
+		value_type getLengthSqrd()  const
 		{
 			return dot(*this);
 		}
 
-		value_type length()  const
+		value_type getLength()  const
 		{
-			return std::sqrt( lengthSqrd() );
+			return std::sqrt( getLengthSqrd() );
 		}
 
 		void normalize()
 		{
-			*this *= 1 / length();
+			*this *= 1 / getLength();
 		}
 
 		template<typename NT>
@@ -309,6 +311,18 @@
 			v[1] = static_cast<NT>(m_data[1]);
 			v[2] = static_cast<NT>(m_data[2]);
 			return v;
+		}
+
+		std::size_t Hash() const
+		{
+			std::size_t hashvalue = std::hash<T>()(m_data[0]);
+
+			for (int i = 1; i < Sz; ++i)
+			{
+				HashCombine(hashvalue, m_data[i]);
+			}
+
+			return hashvalue;
 		}
 
 	protected:
@@ -397,6 +411,20 @@
 		{
 			rhs[i] = (RhsT)lhs[i];
 		}
+	}
+
+	template< typename T, unsigned Sz >
+	T Distance(const Vector< T, Sz >& a, const Vector< T, Sz >& b)
+	{
+		Vector<T, Sz> tmp = b - a;
+		return tmp.getLength();
+	}
+
+	template< typename T, unsigned Sz >
+	T DistanceSqrd(const Vector< T, Sz >& a, const Vector< T, Sz >& b)
+	{
+		Vector<T, Sz> tmp = b - a;
+		return tmp.getLengthSqrd();
 	}
 
 	template< typename T >

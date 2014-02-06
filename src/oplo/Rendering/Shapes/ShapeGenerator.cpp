@@ -1,5 +1,8 @@
 #include "ShapeGenerator.h"
 #include "Math\Vector.h"
+#include "Rendering\oploGL.h"
+
+#include <cassert>
 
 namespace oplo
 {
@@ -62,6 +65,43 @@ namespace oplo
 		buffer[0] = max[0]; buffer[1] = min[1]; buffer[2] = max[2];
 		buffer += interleave;
 		buffer[0] = max[0]; buffer[1] = min[1]; buffer[2] = min[2];
+	}
+
+	void InjectNormalsIntoPrimitive(int primitiveType, float* buffer, int vertexCount, int interleave )
+	{
+		Vec3F a, b, c;
+		int verticesPerPrimitive = 0;
+
+		switch (primitiveType)
+		{
+		case GL_TRIANGLES:
+			verticesPerPrimitive = 3;
+			break;
+		case GL_QUADS:
+			verticesPerPrimitive = 4;
+			break;
+		default:
+			assert(0); //implement me
+			break;
+		}
+
+		for (int i = 0; i < vertexCount * interleave; i += interleave * verticesPerPrimitive)
+		{
+			a.setXyz(buffer[i + 0], buffer[i + 1], buffer[i + 2]);
+			b.setXyz(buffer[i + 0 + interleave], buffer[i + 1 + interleave], buffer[i + 2 + interleave]);
+			c.setXyz(buffer[i + 0 + interleave * 2], buffer[i + 1 + interleave * 2], buffer[i + 2 + interleave * 2]);
+			a -= c;
+			b -= c;
+			c = Cross(a, b);
+			c.normalize();
+
+			for (int j = 0; j < verticesPerPrimitive; ++j)
+			{
+				buffer[i + 3 + interleave * j + 0] = c[0];
+				buffer[i + 3 + interleave * j + 1] = c[1];
+				buffer[i + 3 + interleave * j + 2] = c[2];
+			}
+		}
 	}
 
 	//-1 -> 1

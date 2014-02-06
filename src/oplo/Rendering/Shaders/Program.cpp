@@ -369,7 +369,7 @@ namespace oplo
 
 	void Program::unbind() const
 	{
-		glUseProgram(m_id);
+		glUseProgram(0);
 	}
 
 }

@@ -136,14 +136,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GlutApp.cpp" />
-    <ClCompile Include="Main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GlutApp.h" />
+    <ClCompile Include="..\..\src\samples\GlutApp\GlutApp.cpp" />
+    <ClCompile Include="..\..\src\samples\InstancingTest\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\data\shaders\InstancingTest.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\samples\GlutApp\GlutApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -19,6 +19,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InstancingTest", "Instancin
 		{5538CD74-C4FE-4FFD-8ECC-26C522E1ED6F} = {5538CD74-C4FE-4FFD-8ECC-26C522E1ED6F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PointClouds", "PointClouds\PointClouds.vcxproj", "{C425502F-6FEA-4661-9924-E555B4315BFF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5538CD74-C4FE-4FFD-8ECC-26C522E1ED6F} = {5538CD74-C4FE-4FFD-8ECC-26C522E1ED6F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -89,6 +94,18 @@ Global
 		{723C9E9B-21DF-4619-8DB3-29A1AC740682}.Release|Win32.Build.0 = Release|Win32
 		{723C9E9B-21DF-4619-8DB3-29A1AC740682}.Release|x64.ActiveCfg = Release|x64
 		{723C9E9B-21DF-4619-8DB3-29A1AC740682}.Release|x64.Build.0 = Release|x64
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Debug|Win32.Build.0 = Debug|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Debug|x64.ActiveCfg = Debug|x64
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Debug|x64.Build.0 = Debug|x64
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Release|Win32.ActiveCfg = Release|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Release|Win32.Build.0 = Release|Win32
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Release|x64.ActiveCfg = Release|x64
+		{C425502F-6FEA-4661-9924-E555B4315BFF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

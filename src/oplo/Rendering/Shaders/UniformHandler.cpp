@@ -77,6 +77,9 @@ namespace oplo
 		{
 			std::string uniform = p.getUniformName(i);
 
+			if (!m_uniforms.keyIsValid(uniform))
+				continue;
+
 			const HashMap::Iterator itr = m_uniforms.find(uniform);
 
 			if (itr != m_uniforms.end())

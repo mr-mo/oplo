@@ -15,18 +15,23 @@ public:
 
 	~BufferObject();
 
-	void setImmutable(bool immutable);
-
-	bool isImmutable() const;
-
 	void allocate(
 			unsigned bindingHint, 
-			unsigned dim, 
 			unsigned size, 
 			unsigned flags,
-			const char* );
+			const void* data = 0,
+			bool immutable = false );
+
+	void setSubData(
+		unsigned bindingHint,
+		unsigned offset,
+		unsigned size,
+		const void* data
+		);
 
 	void invalidate() const;
+
+	void create(const char* label = 0);
 
 	void deallocate();
 
@@ -44,8 +49,7 @@ public:
 
 private:
 
-	bool m_immutable;
-
+	//todo: factor me out... this makes class a lot fatter than it needs to be
 	void* m_pointer;
 
 	unsigned m_id;

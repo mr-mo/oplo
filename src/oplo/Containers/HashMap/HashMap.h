@@ -122,6 +122,11 @@ struct DenseHashMap
 		}
 	}
 
+	bool keyIsValid(KeyArgument key) const
+	{
+		return m_params.isValidKey(key);
+	}
+
 	const Iterator find(KeyArgument key) const
 	{
 		const std::size_t ander = (m_tableSize - 1);

@@ -28,9 +28,9 @@ namespace oplo
 		lasUint64 getTotalPoints();
 
 		template< typename pointType >
-		const pointType* getPoint(lasUint64 i) const
+		const pointType* getPoint(lasUint64 i)
 		{
-			lasUint32 fileOffset = m_header.m_offsetToPointData + i * m_header.m_pointRecordLength;
+			lasUint64 fileOffset = m_header.m_offsetToPointData + i * m_header.m_pointRecordLength;
 
 			if (fileOffset < m_bufferPointer || (fileOffset - m_bufferPointer) >= m_bufferSize)
 			{
@@ -51,7 +51,7 @@ namespace oplo
 	private:
 
 		lasUint64 m_bufferSize;
-		lasInt32 m_bufferPointer;
+		lasUint64 m_bufferPointer;
 		char* m_buffer;
 
 		std::string		m_fileName;

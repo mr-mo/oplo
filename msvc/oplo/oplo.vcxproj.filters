@@ -58,9 +58,6 @@
     <Filter Include="Source Files\Rendering\Shapes">
       <UniqueIdentifier>{a65c53c6-be1d-4df7-ab91-2ea1fab80e0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Containers\LinearOctree">
-      <UniqueIdentifier>{47dd342c-d4d0-42e5-8211-460c76282f46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Containers\RTree">
       <UniqueIdentifier>{6b839ee8-14ad-469e-84d4-6931e3453ea9}</UniqueIdentifier>
     </Filter>
@@ -72,6 +69,12 @@
     </Filter>
     <Filter Include="Source Files\DataFormats\LAS">
       <UniqueIdentifier>{7ca1ebac-fc2e-4a0d-8621-e5541b1d93d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers\Utility">
+      <UniqueIdentifier>{1e69d484-fa00-4720-a570-3958aefe2754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers\LinearOctree">
+      <UniqueIdentifier>{47dd342c-d4d0-42e5-8211-460c76282f46}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +119,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\oplo\DataFormats\LAS\LAS.cpp">
       <Filter>Source Files\DataFormats\LAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Containers\Utility\MortonCode.cpp">
+      <Filter>Source Files\Containers\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\TextureBufferObject.cpp">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.cpp">
+      <Filter>Source Files\Profiling\Timers\QPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +211,18 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\DataFormats\LAS\LAS.h">
       <Filter>Source Files\DataFormats\LAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Containers\LinearOctree\LinearOctree.h">
+      <Filter>Source Files\Containers\LinearOctree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Containers\Utility\MortonCode.h">
+      <Filter>Source Files\Containers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureBufferObject.h">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Containers\LinearOctree\MinimalOctree.h">
+      <Filter>Source Files\Containers\LinearOctree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

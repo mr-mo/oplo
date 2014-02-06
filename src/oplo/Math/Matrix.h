@@ -36,7 +36,7 @@ public:
 	{
 		for (int i = 0; i < 16; ++i)
 		{
-			m_data[0] = rhs[0];
+			m_data[i] = rhs[i];
 		}
 	}
 
@@ -44,7 +44,7 @@ public:
 	{
 		for (int i = 0; i < 16; ++i)
 		{
-			m_data[0] = rhs[0];
+			m_data[i] = rhs[i];
 		}
 
 		return *this;

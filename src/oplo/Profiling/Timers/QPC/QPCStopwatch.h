@@ -27,54 +27,69 @@ THE SOFTWARE.*/
 #include <stdint.h>
 #include <windows.h>
 
-//Strictly speaking not a timer
-//We do not try to associate ticks with time
-//Rather just use the ticks as a performance metric over a frame
-//To show inclusive/exclusive timings
-class QPCStopwatch
+namespace oplo
 {
-public:
 
-	typedef LONGLONG ReturnType;
-
-	QPCStopwatch()
+	//Strictly speaking not a timer
+	//We do not try to associate ticks with time
+	//Rather just use the ticks as a performance metric over a frame
+	//To show inclusive/exclusive timings
+	class QPCStopwatch
 	{
-		m_start.QuadPart = 0;
-		m_stop.QuadPart = 0;
-	}
+	public:
 
-	inline void start()
-	{
-		QueryPerformanceCounter(&m_start);
-	}
+		typedef LONGLONG ReturnType;
 
-	inline void stop()
-	{
-		QueryPerformanceCounter(&m_stop);
-	}
+		QPCStopwatch()
+		{
+			m_start.QuadPart = 0;
+			m_stop.QuadPart = 0;
+		}
 
-	inline LONGLONG runningDiff() const
-	{
-		LARGE_INTEGER tmp;
-		QueryPerformanceCounter(&tmp);
-		return tmp.QuadPart - m_start.QuadPart;
-	}
+		inline void start()
+		{
+			QueryPerformanceCounter(&m_start);
+		}
 
-	inline LONGLONG diff() const
-	{
-		return m_stop.QuadPart - m_start.QuadPart;
-	}
+		inline void stop()
+		{
+			QueryPerformanceCounter(&m_stop);
+		}
 
-	inline static LONGLONG poll()
-	{
-		LARGE_INTEGER tmp;
-		QueryPerformanceCounter(&tmp);
-		return tmp.QuadPart;
-	}
+		inline LONGLONG runningDiff() const
+		{
+			LARGE_INTEGER tmp;
+			QueryPerformanceCounter(&tmp);
+			return tmp.QuadPart - m_start.QuadPart;
+		}
 
-private:
-	LARGE_INTEGER m_start;
-	LARGE_INTEGER m_stop;
-};
+		inline LONGLONG diff() const
+		{
+			return m_stop.QuadPart - m_start.QuadPart;
+		}
+
+		inline double diffMS() const
+		{
+			return (diff() / (double)m_frequency.QuadPart) * 1000;
+		}
+
+		inline static LONGLONG poll()
+		{
+			LARGE_INTEGER tmp;
+			QueryPerformanceCounter(&tmp);
+			return tmp.QuadPart;
+		}
+
+		static void initialize();
+
+	private:
+
+		static LARGE_INTEGER m_frequency;
+
+		LARGE_INTEGER m_start;
+		LARGE_INTEGER m_stop;
+	};
+
+}
 
 #endif

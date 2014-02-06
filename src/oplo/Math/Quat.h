@@ -191,7 +191,8 @@ public:
 		value_type sine = sin( angle.getRadians() / 2 );
         value_type cosine = cos( angle.getRadians() / 2 );
 
-		setXyzw( axis.X() * sine, axis.Y() * sine, axis.Z() * sine, cosine );		
+		setXyzw( axis.X() * sine, axis.Y() * sine, axis.Z() * sine, cosine );
+		normalize();
 	}
 
 	void getAngle( Angle<value_type>& angle )

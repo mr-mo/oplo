@@ -69,11 +69,12 @@ namespace oplo
 
 		//elevationPage.beginFrame(camera);
 		//cameraController.UpdateCamera();
-		//float cosLight = cos(fLightAngle * 3.1415928f / 180.f);
-		//float sinLight = sin(fLightAngle * 3.1415928f / 180.f);
+		float cosLight = cos(m_globalLightDirection.getRadians());
+		float sinLight = sin(m_globalLightDirection.getRadians());
 
-		//Math::Vec3F vLightDirDowncast = Math::Vec3F(cosLight, sinLight, 0.15f);
-		//vLightDirDowncast.normalize();
+		Vec3F lightDir = Vec3F(cosLight, sinLight, 0.15f);
+		lightDir.normalize();
+		m_uniforms.setUniform("lightDirection", lightDir);
 
 		//float maxTan = camera.GetTangentFOV();
 		//const float tangentAxisDivisor = static_cast<float>(std::max(camera.GetViewingWidth(), camera.GetViewingHeight()));
