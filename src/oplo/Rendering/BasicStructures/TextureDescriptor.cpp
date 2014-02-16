@@ -16,6 +16,11 @@ namespace oplo
 		m_type(I8)
 	{}
 
+	TextureDescriptor::~TextureDescriptor()
+	{
+		destroyObject();
+	}
+
 	void TextureDescriptor::setup2d(
 		unsigned target,
 		unsigned mipmapDepth,
@@ -55,17 +60,46 @@ namespace oplo
 		m_format = format;
 	}
 
-	void TextureDescriptor::createImmutable()
+	void TextureDescriptor::createStorage(bool immutable)
 	{
-		switch (m_target)
+		if (immutable)
 		{
-		case GL_TEXTURE_2D:
-			glTextureStorage2DEXT(m_id, m_target, m_mipmapDepth + 1, m_internalFormat, m_width, m_height);
-			break;
-		case GL_TEXTURE_2D_ARRAY:
-			glTextureStorage3DEXT(m_id, m_target, m_mipmapDepth + 1, m_internalFormat, m_width, m_height, m_zDepth);
-			break;
+			switch (m_target)
+			{
+			case GL_TEXTURE_2D:
+				glTextureStorage2DEXT(m_id, m_target, m_mipmapDepth, m_internalFormat, m_width, m_height);
+				break;
+			case GL_TEXTURE_2D_ARRAY:
+				glTextureStorage3DEXT(m_id, m_target, m_mipmapDepth, m_internalFormat, m_width, m_height, m_zDepth);
+				break;
+			}
 		}
+		else
+		{
+			switch (m_target)
+			{
+			case GL_TEXTURE_2D:
+				glTextureImage2DEXT(m_id, m_target, m_mipmapDepth, m_internalFormat, m_width, m_height, 0, m_format, m_type, 0);
+				break;
+			case GL_TEXTURE_2D_ARRAY:
+				glTextureImage3DEXT(m_id, m_target, m_mipmapDepth, m_internalFormat, m_width, m_height, m_zDepth, 0, m_format, m_type, 0);
+				break;
+			}
+		}
+	}
+
+	void TextureDescriptor::resize(int w, int h)
+	{
+		m_width = w;
+		m_height = h;
+
+		//todo: error check against immutable
+		createStorage(false);
+	}
+
+	void TextureDescriptor::load(const void* data)
+	{
+		subload(data, 0, 0, 0, m_width, m_height);
 	}
 
 	void TextureDescriptor::setParameter(unsigned texParameter, int value)
@@ -79,7 +113,7 @@ namespace oplo
 	}
 
 	void TextureDescriptor::subloadMip(
-		void* data,
+		const void* data,
 		unsigned depth,
 		unsigned x,
 		unsigned y,
@@ -105,7 +139,7 @@ namespace oplo
 
 
 	void TextureDescriptor::subload(
-		void* data,
+		const void* data,
 		unsigned x,
 		unsigned y,
 		unsigned z,
@@ -115,7 +149,7 @@ namespace oplo
 		switch (m_target)
 		{
 		case GL_TEXTURE_2D:
-			glTextureSubImage2DEXT(m_id, m_target, 0, 0, 0, width, height, m_format, m_type, data);
+			glTextureSubImage2DEXT(m_id, m_target, 0, x, y, width, height, m_format, m_type, data);
 			break;
 		case GL_TEXTURE_2D_ARRAY:
 			glTextureSubImage3DEXT(m_id, m_target, 0, x, y, z, m_width, m_height, 1, m_format, m_type, data);
@@ -128,6 +162,10 @@ namespace oplo
 		}
 	}
 
+	void TextureDescriptor::textureCopy(const TextureDescriptor& desc)
+	{
+		glCopyImageSubData(desc.getId(), desc.getTarget(), 0, 0, 0, 0, m_id, m_target, 0, 0, 0, 0, desc.getWidth(), desc.getHeight(), 0);
+	}
 
 
 	void TextureDescriptor::createObject()
@@ -143,6 +181,21 @@ namespace oplo
 	unsigned TextureDescriptor::getId() const
 	{
 		return m_id;
+	}
+
+	unsigned TextureDescriptor::getWidth() const
+	{
+		return m_width;
+	}
+
+	unsigned TextureDescriptor::getHeight() const
+	{
+		return m_height;
+	}
+
+	unsigned TextureDescriptor::getTarget() const
+	{
+		return m_target;
 	}
 
 }

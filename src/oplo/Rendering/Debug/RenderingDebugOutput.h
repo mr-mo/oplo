@@ -56,6 +56,13 @@ namespace oplo
 		bool m_multithreaded;
 	};
 
+	//TODO: Custom gl calls...
+	void ObjectLabel(GLenum identifier, GLuint name, GLsizei size, const char* label);
+		
+	void DebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, const char* fmt, ...);
+
+	void DebugMessageS(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
+
 	void GLAPIENTRY PrimaryDebugFunc(
 		GLenum source,
 		GLenum type,

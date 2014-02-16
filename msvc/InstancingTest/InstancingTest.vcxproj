@@ -138,12 +138,20 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\samples\GlutApp\GlutApp.cpp" />
     <ClCompile Include="..\..\src\samples\InstancingTest\Main.cpp" />
+    <ClCompile Include="..\..\src\samples\InstancingTest\PatternGenerator.cpp" />
+    <ClCompile Include="..\..\src\samples\InstancingTest\SummedAreaTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\data\shaders\InstancingTest.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\samples\GlutApp\GlutApp.h" />
+    <ClInclude Include="..\..\src\samples\InstancingTest\PatternGenerator.h" />
+    <ClInclude Include="..\..\src\samples\InstancingTest\SummedAreaTable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\data\shaders\ComputeSAT.glsl" />
+    <None Include="..\..\data\shaders\DeferredComposition.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

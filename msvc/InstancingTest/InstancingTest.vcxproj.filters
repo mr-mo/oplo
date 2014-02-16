@@ -24,6 +24,12 @@
     <ClCompile Include="..\..\src\samples\InstancingTest\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\samples\InstancingTest\PatternGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\samples\InstancingTest\SummedAreaTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\data\shaders\InstancingTest.glsl">
@@ -34,5 +40,19 @@
     <ClInclude Include="..\..\src\samples\GlutApp\GlutApp.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\samples\InstancingTest\PatternGenerator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\samples\InstancingTest\SummedAreaTable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\data\shaders\ComputeSAT.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\data\shaders\DeferredComposition.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

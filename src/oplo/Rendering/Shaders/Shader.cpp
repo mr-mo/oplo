@@ -36,18 +36,18 @@ namespace oplo
 	{
 		if (m_id)
 		{
-			glDebugMessageInsert(
+			oplo::DebugMessage(
 					GL_DEBUG_SOURCE_APPLICATION, 
 					GL_DEBUG_TYPE_ERROR, 
 					m_id, 
 					GL_DEBUG_SEVERITY_MEDIUM, 
-					-1, 
-					"Redundant Create Call");
+					"%s already created", m_label.c_str());
 			return;
 		}
 
 		m_id = glCreateShader(m_target);
-		glObjectLabel(GL_SHADER, m_id, -1, m_label.c_str());
+
+		oplo::ObjectLabel(GL_SHADER, m_id, -1, m_label.c_str());
 	}
 
 	Shader::Target Shader::getTarget() const
@@ -74,13 +74,12 @@ namespace oplo
 	{
 		if (!m_id)
 		{
-			glDebugMessageInsert(
+			oplo::DebugMessage(
 					GL_DEBUG_SOURCE_APPLICATION, 
 					GL_DEBUG_TYPE_ERROR, 
 					0, 
 					GL_DEBUG_SEVERITY_MEDIUM, 
-					-1, 
-					"Compiling Null Shader");
+					"Compiling %s before created", m_label.c_str());
 			return;
 		}
 
@@ -103,13 +102,12 @@ namespace oplo
 
 			if (!success)
 			{
-				glDebugMessageInsert(
+				oplo::DebugMessage(
 					GL_DEBUG_SOURCE_APPLICATION,
 					GL_DEBUG_TYPE_ERROR,
 					0,
 					GL_DEBUG_SEVERITY_MEDIUM,
-					-1,
-					m_files[t].c_str());
+					"File %s filed to load", m_files[t].c_str());
 			}
 		}
 
@@ -157,20 +155,19 @@ namespace oplo
 	{
 		int logLength = 0;
 
-		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, m_id, -1, m_label.c_str());
+		//glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, m_id, -1, m_label.c_str());
 		glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &logLength);
 
-		if (logLength > 0)
+		if (logLength > 1)
 		{
 			char *log = new char[logLength];
 			glGetShaderInfoLog(m_id, logLength, &logLength, log);
 
-			glDebugMessageInsert(
+			oplo::DebugMessageS(
 				GL_DEBUG_SOURCE_APPLICATION,
 				GL_DEBUG_TYPE_OTHER,
 				0,
 				GL_DEBUG_SEVERITY_NOTIFICATION,
-				-1,
 				log);
 
 			delete[] log;
@@ -178,7 +175,7 @@ namespace oplo
 
 		glGetShaderiv(m_id, GL_COMPILE_STATUS, &logLength);
 		
-		glPopDebugGroup();
+		//glPopDebugGroup();
 
 	}
 }

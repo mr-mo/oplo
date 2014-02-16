@@ -76,6 +76,12 @@
     <Filter Include="Source Files\Containers\LinearOctree">
       <UniqueIdentifier>{47dd342c-d4d0-42e5-8211-460c76282f46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Rendering\Techniques">
+      <UniqueIdentifier>{7c0e8e62-a16c-469c-bc03-c95d23dab964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering\Techniques\Rasterization">
+      <UniqueIdentifier>{f43fcdda-db9a-499c-af16-9dc34727bb2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp">
@@ -128,6 +134,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.cpp">
       <Filter>Source Files\Profiling\Timers\QPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\Techniques\Rasterization\DeferredFramebuffer.cpp">
+      <Filter>Source Files\Rendering\Techniques\Rasterization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +232,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\Containers\LinearOctree\MinimalOctree.h">
       <Filter>Source Files\Containers\LinearOctree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\Framebuffer.h">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Techniques\Rasterization\DeferredFramebuffer.h">
+      <Filter>Source Files\Rendering\Techniques\Rasterization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

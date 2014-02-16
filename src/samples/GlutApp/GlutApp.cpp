@@ -24,7 +24,9 @@ namespace oplo
 		{
 			m_debugOutput.enable();
 			m_debugOutput.disableMultithreading();
-			glDebugMessageCallback(PrimaryDebugFunc, &m_debugOutput);
+
+			if (GLEW_KHR_debug)
+				glDebugMessageCallback(PrimaryDebugFunc, &m_debugOutput);
 		}
 
 		m_cameraController.setCamera(&m_camera);
