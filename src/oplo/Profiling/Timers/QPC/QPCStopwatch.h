@@ -30,10 +30,6 @@ THE SOFTWARE.*/
 namespace oplo
 {
 
-	//Strictly speaking not a timer
-	//We do not try to associate ticks with time
-	//Rather just use the ticks as a performance metric over a frame
-	//To show inclusive/exclusive timings
 	class QPCStopwatch
 	{
 	public:

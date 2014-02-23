@@ -76,6 +76,12 @@
     <Filter Include="Source Files\Containers\LinearOctree">
       <UniqueIdentifier>{47dd342c-d4d0-42e5-8211-460c76282f46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Rendering\Queries">
+      <UniqueIdentifier>{c70de96b-4178-436c-9bdd-c2619001f6b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling\Timers\GPU">
+      <UniqueIdentifier>{dda86153-7944-48b7-95de-1d663f53242f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp">
@@ -223,6 +229,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\Containers\LinearOctree\MinimalOctree.h">
       <Filter>Source Files\Containers\LinearOctree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Queries\QueryObject.h">
+      <Filter>Source Files\Rendering\Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\GPU\GPUStopwatch.h">
+      <Filter>Source Files\Profiling\Timers\GPU</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

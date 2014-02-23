@@ -49,10 +49,6 @@ namespace oplo
 				traverseOrder(16434824)
 			{}
 
-			__inline int8_t getTraverseOrder() const
-			{
-				return (int8_t)((traverseOrder >> (stackState * 3)) & 0x00000007);
-			}
 
 
 			int8_t					stackState;
@@ -139,124 +135,20 @@ namespace oplo
 		}
 
 		template<typename Traverser>
-		void stackTraversal(Traverser& traverse)
-		{
-			if (!m_renderStructure)
-				return;
-
-			LinearOctreeTypes::ExplicitStack stack[MortonCode::MAX_LEVELS + 1];
-
-			int8_t stackPtr = 0;
-			int8_t currentDepth, nextDepth;
-
-			MortonCode code(0);
-
-			//outer radius of node
-			double outerRadius = m_ext.getLength() * 0.5;
-			Vec3D ext = m_ext * 0.5;
-			Vec3D center = m_center;
-
-			double outerRadiusNext;
-			Vec3D extNext;
-			Vec3D centerNext;
-
-			if (traverse.traverse(center, ext, outerRadius))
-			{
-				MortonCode nextCode = code;
-
-				stack[0].nodePtr = m_renderStructure;
-				stack[0].stackState = 0;
-				stack[0].stateOffset = 0;
-
-				traverse.getTraverseOrder(stack[0].traverseOrder, center);
-
-				while (stackPtr >= 0)
-				{
-					currentDepth = stackPtr;
-					nextDepth = stackPtr + 1;
-
-					nextCode = code;
-					nextCode.setDepth(nextDepth);
-
-					bool didSomething = false;
-					LinearOctreeTypes::ExplicitStack& currentStack = stack[stackPtr];
-
-					for (; currentStack.stackState < 8; ++currentStack.stackState)
-					{
-						int8_t currentOrder = currentStack.getTraverseOrder();
-
-						if (currentStack.nodePtr->m_children & (1 << currentOrder))
-						{
-							nextCode.setCode(nextDepth, currentOrder);
-
-							outerRadiusNext = outerRadius * 0.5;
-							extNext = ext * 0.5;
-
-							centerNext = center + extNext * MortonCode::getScalar(currentOrder);
-
-							++currentStack.stateOffset;
-
-							if (traverse.traverse(centerNext, extNext, outerRadiusNext))
-							{
-								++stackPtr;
-
-								code = nextCode;
-								center = centerNext;
-								outerRadius = outerRadiusNext;
-								ext = extNext;
-
-								LinearOctreeTypes::ExplicitStack& nextStack = stack[stackPtr];
-
-								nextStack.stackState = 0;
-								nextStack.stateOffset = 0;
-
-								unsigned popCount = getPopCount(currentOrder, currentStack.nodePtr->m_children) - 1;
-
-								nextStack.nodePtr = (currentStack.nodePtr + currentStack.nodePtr->m_nodePointer) + getPopCount(currentOrder, currentStack.nodePtr->m_children) - 1;
-
-								if (nextStack.nodePtr->validData())
-								{
-									traverse.dataBlock(m_dataStructure + nextStack.nodePtr->m_dataOffset, center, ext, outerRadius);
-								}
-
-								traverse.getTraverseOrder(nextStack.traverseOrder, center);
-
-								++currentStack.stackState;
-
-								didSomething = true;
-								break;
-							}
-						}
-					}
-
-					if (!didSomething)
-					{
-						assert(currentDepth == stackPtr);
-						decreaseStack(code, center, ext, outerRadius, currentDepth, stackPtr);
-					}
-				}
-			}
-		}
-
-		template<typename Traverser>
-		void recursiveTraversal(Traverser& traverse)
+		void traverse(Traverser& traverse)
 		{
 			if (!m_renderStructure)
 				return;
 
 			double outerRadius = m_ext.getLength() * 0.5;
 
-			Vec3D ext = m_ext * 0.5;
-
-			Vec3D center = m_center;
-
-			recursiveInner<Traverser>(traverse, center, ext, outerRadius, m_renderStructure);
+			traverseInner<Traverser>(traverse, m_center, m_ext * 0.5, outerRadius, m_renderStructure);
 		}
 
 	private:
 
 		template<typename T>
-		void recursiveInner(T& f, const Vec3D& c, const Vec3D& e, double r, OctNode32* n)
+		void traverseInner(T& f, const Vec3D& c, const Vec3D& e, double r, OctNode32* n)
 		{
 			if (n->validData())
 			{
@@ -278,7 +170,7 @@ namespace oplo
 
 			for (int i = 0; i < 8; ++i)
 			{
-				int nextChild = ((traverseOrder >> (i * 3)) & 0x00000007);
+				int nextChild = getTraverseOrder(traverseOrder, i);
 				
 				if (n->m_children & (1 << nextChild))
 				{
@@ -288,24 +180,15 @@ namespace oplo
 					{
 						unsigned popCount = getPopCount(nextChild, n->m_children) - 1;
 
-						recursiveInner<T>(f, cn, en, rn, (n + n->m_nodePointer) + popCount);
+						traverseInner<T>(f, cn, en, rn, (n + n->m_nodePointer) + popCount);
 					}
 				}
 			}
 		}
 
-		void decreaseStack(MortonCode& code, Vec3D& c, Vec3D& ext, double& outerRadius, unsigned currentDepth, int8_t& stackPtr)
+		int getTraverseOrder(int traverseOrder, int iter) const
 		{
-			unsigned bitCode = code.getCode(currentDepth);
-
-			c = c - MortonCode::getScalar(bitCode) * ext;
-			ext *= 2;
-			outerRadius *= 2;
-
-			code.setCode(currentDepth, 0);
-			code.setDepth(currentDepth - 1);
-
-			stackPtr -= 1;
+			return (int)((traverseOrder >> (iter * 3)) & 0x00000007);
 		}
 
 		int8_t getPopCount(int8_t numBitsOff, int8_t number)

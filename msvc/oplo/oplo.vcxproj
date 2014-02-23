@@ -163,6 +163,7 @@
     <ClInclude Include="..\..\src\oplo\Math\Vector.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\CPUInformation.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.h" />
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\GPU\GPUStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTscp\RdTscpStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\oploGL.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\Queries\QueryObject.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Program.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Shader.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Uniform.h" />

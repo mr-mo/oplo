@@ -64,6 +64,11 @@ namespace oplo
 		return m_viewingPositionWorld;
 	}
 
+	const Plane<double>& Camera::GetCullingPlane(int plane) const
+	{
+		return m_cullingPlanes[plane];
+	}
+
 	void Camera::SetViewport(int x, int y, int w, int h)
 	{
 		m_viewport[0] = x;

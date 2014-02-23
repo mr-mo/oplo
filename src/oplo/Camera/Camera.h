@@ -63,6 +63,8 @@ namespace oplo
 
 		const Vec3D& GetWorldPosition() const;
 
+		const Plane<double>& GetCullingPlane(int plane) const;
+
 		void SetViewport(int x, int y, int w, int h);
 
 		void GetViewport(int& x, int& y, int& w, int& h);
