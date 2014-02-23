@@ -15,7 +15,7 @@ namespace oplo
 	{
 	public:
 
-		RenderingDebugOutput(std::function<void(const std::string&)> f = [](const std::string& str) { std::cout << str << std::endl; });
+		RenderingDebugOutput(std::function<void(const std::string&)> f = [](const std::string& str) { std::cout << str << std::endl; __debugbreak();  });
 
 		~RenderingDebugOutput();
 
@@ -55,6 +55,13 @@ namespace oplo
 
 		bool m_multithreaded;
 	};
+
+	//TODO: Custom gl calls...
+	void ObjectLabel(GLenum identifier, GLuint name, GLsizei size, const char* label);
+		
+	void DebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, const char* fmt, ...);
+
+	void DebugMessageS(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
 
 	void GLAPIENTRY PrimaryDebugFunc(
 		GLenum source,

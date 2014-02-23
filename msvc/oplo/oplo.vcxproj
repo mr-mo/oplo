@@ -87,7 +87,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;C:\Dev\ThirdParty\glew-1.10.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../src;$(SolutionDir)/../src/oplo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;OPLO_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -144,6 +144,7 @@
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Uniform.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\Techniques\Rasterization\DeferredFramebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\oplo\Camera\Camera.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTscp\RdTscpStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\BufferObject.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\Framebuffer.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureBufferObject.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.h" />
@@ -179,6 +181,7 @@
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\Uniform.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shaders\UniformHandler.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Shapes\ShapeGenerator.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\Techniques\Rasterization\DeferredFramebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.inl" />

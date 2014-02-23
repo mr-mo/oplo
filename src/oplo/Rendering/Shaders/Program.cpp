@@ -1,6 +1,7 @@
 #include "Rendering/Shaders/Program.h"
 #include "Rendering/Shaders/Uniform.h"
 #include "Rendering/Shaders/Shader.h"
+#include "Rendering/Debug/RenderingDebugOutput.h"
 #include <cassert>
 
 namespace oplo
@@ -128,7 +129,7 @@ namespace oplo
 
 		m_id = glCreateProgram();
 
-		glObjectLabel(GL_PROGRAM, m_id, -1, m_name.c_str());
+		oplo::ObjectLabel(GL_PROGRAM, m_id, -1, m_name.c_str());
 
 		for (auto s : m_shaders)
 		{
@@ -159,18 +160,20 @@ namespace oplo
 
 		glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		char * log = new char[infoLogLength];
-		glGetProgramInfoLog(m_id, infoLogLength, &charsWritten, log);
+		if (infoLogLength > 1)
+		{
+			char * log = new char[infoLogLength];
+			glGetProgramInfoLog(m_id, infoLogLength, &charsWritten, log);
 
-		glDebugMessageInsert(
-			GL_DEBUG_SOURCE_APPLICATION,
-			GL_DEBUG_TYPE_OTHER,
-			0,
-			GL_DEBUG_SEVERITY_NOTIFICATION,
-			-1,
-			log);
+			oplo::DebugMessageS(
+				GL_DEBUG_SOURCE_APPLICATION,
+				GL_DEBUG_TYPE_OTHER,
+				0,
+				GL_DEBUG_SEVERITY_NOTIFICATION,
+				log);
 
-		delete[] log;
+			delete[] log;
+		}
 
 		GLint success = GL_FALSE;
 		glGetProgramiv(m_id, GL_LINK_STATUS, &success);

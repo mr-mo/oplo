@@ -31,7 +31,8 @@ void main()
 
 #ifdef FRAGMENT_SHADER
 
-layout(location = 0) out vec4 color;
+layout(location = 0) out vec3 color;
+layout(location = 1) out vec3 normal;
 layout(location = 1) uniform vec3 lightDirection = vec(0, 1, 0);
 
 in vec4 colorFrag;
@@ -39,7 +40,8 @@ in vec3 normalOut;
 
 void main()
 {
-	color = colorFrag * max(0, dot(normalOut, lightDirection)) + colorFrag * vec4(0.2); //mix(colorFrag * max(0, dot(normalOut, lightDirection)) + colorFrag * vec4(0.2), vec4(normalOut * 0.5 + 0.5, colorFrag.a), 0.2);
+	color = colorFrag.xyz; // * max(0, dot(normalOut, lightDirection)) + colorFrag * vec4(0.2); //mix(colorFrag * max(0, dot(normalOut, lightDirection)) + colorFrag * vec4(0.2), vec4(normalOut * 0.5 + 0.5, colorFrag.a), 0.2);
+	normal = normalOut;
 }
 
 

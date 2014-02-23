@@ -1,4 +1,5 @@
 #include "TextureBufferObject.h"
+#include "Rendering\Debug\RenderingDebugOutput.h"
 #include <cstdio>
 
 namespace oplo
@@ -32,7 +33,7 @@ namespace oplo
 				sprintf_s(buffer, "Unknown_bufTex", label);
 			}
 
-			glObjectLabel(GL_BUFFER, m_id, -1, buffer);
+			oplo::ObjectLabel(GL_BUFFER, m_id, -1, buffer);
 		}
 	}
 

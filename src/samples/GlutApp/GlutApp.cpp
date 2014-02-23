@@ -24,7 +24,9 @@ namespace oplo
 		{
 			m_debugOutput.enable();
 			m_debugOutput.disableMultithreading();
-			glDebugMessageCallback(PrimaryDebugFunc, &m_debugOutput);
+
+			if (GLEW_KHR_debug)
+				glDebugMessageCallback(PrimaryDebugFunc, &m_debugOutput);
 		}
 
 		m_cameraController.setCamera(&m_camera);
@@ -65,7 +67,12 @@ namespace oplo
 
 		Matrix4<float> mvp = proj * cam;
 
+		m_uniforms.setUniform("modelview", cam.begin(), 16);
 		m_uniforms.setUniform("modelviewProjection", mvp.begin(), 16);
+
+		mvp.invert();
+		m_uniforms.setUniform("inverseModelviewProjection", mvp.begin(), 16);
+
 
 		//elevationPage.beginFrame(camera);
 		//cameraController.UpdateCamera();
@@ -85,8 +92,6 @@ namespace oplo
 		//Math::AffineMatrix< float > mProjection = camera.GetProjectionMatrix();
 		//Math::AffineMatrix< float > mModelviewProjection = mProjection * mModelview;
 
-		//Engine::staticGet<UniformHandler>().SetUniform("modelView", mModelview.Begin(), 16, true);
-		//Engine::staticGet<UniformHandler>().SetUniform("modelViewProjection", mModelviewProjection.Begin(), 16, true);
 
 		//mModelviewProjection.Invert();
 

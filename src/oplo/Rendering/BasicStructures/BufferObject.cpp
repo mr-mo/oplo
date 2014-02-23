@@ -21,22 +21,21 @@ void BufferObject::create(const char* label /*= 0*/)
 
 		if (label)
 		{
-			glObjectLabel(GL_BUFFER, m_id, -1, label);
+			oplo::ObjectLabel(GL_BUFFER, m_id, -1, label);
 		}
 		else
 		{
-			glObjectLabel(GL_BUFFER, m_id, -1, "Unnamed Buffer");
+			oplo::ObjectLabel(GL_BUFFER, m_id, -1, "Unnamed Buffer");
 		}
 	}
 	else
 	{
-		glDebugMessageInsert(
+		oplo::DebugMessage(
 			GL_DEBUG_SOURCE_APPLICATION, 
 			GL_DEBUG_TYPE_OTHER,
 			0,
 			GL_DEBUG_SEVERITY_NOTIFICATION,
-			-1,
-			"Trying to recreate already allocated buffer");
+			"Trying to recreate already allocated buffer: %s", label ? label : "Unnamed Bufer");
 	}
 }
 
@@ -49,12 +48,11 @@ void BufferObject::allocate(
 {
 	if (!m_id)
 	{
-		glDebugMessageInsert(
+		oplo::DebugMessage(
 			GL_DEBUG_SOURCE_APPLICATION,
 			GL_DEBUG_TYPE_ERROR,
 			0,
 			GL_DEBUG_SEVERITY_NOTIFICATION,
-			-1,
 			"Allocating buffer before it's created");
 	}
 

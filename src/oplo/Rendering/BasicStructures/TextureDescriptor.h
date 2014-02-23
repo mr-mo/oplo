@@ -15,6 +15,7 @@ namespace oplo
 		{
 			I8 = GL_BYTE,
 			UI8 = GL_UNSIGNED_BYTE,
+			F16 = GL_HALF_FLOAT,
 			I16 = GL_SHORT,
 			UI16 = GL_UNSIGNED_SHORT,
 			I32 = GL_INT,
@@ -23,6 +24,10 @@ namespace oplo
 		};
 
 		TextureDescriptor();
+
+		~TextureDescriptor();
+
+		void textureCopy(const TextureDescriptor& desc);
 
 		void setup2d(
 			unsigned target,
@@ -43,10 +48,14 @@ namespace oplo
 			unsigned format,
 			DataType type);
 
-		void createImmutable();
+		void resize(int w, int h);
+
+		void createStorage(bool immutable);
+
+		void load(const void* data);
 
 		void subloadMip(
-			void* data,
+			const void* data,
 			unsigned depth,
 			unsigned x,
 			unsigned y,
@@ -55,7 +64,7 @@ namespace oplo
 			unsigned height);
 
 		void subload(
-			void* data,
+			const void* data,
 			unsigned x,
 			unsigned y,
 			unsigned z,
@@ -71,6 +80,19 @@ namespace oplo
 		void destroyObject();
 
 		unsigned getId() const;
+
+		unsigned getWidth() const;
+
+		unsigned getHeight() const;
+
+		unsigned getTarget() const;
+
+		template<typename T>
+		void fetchTexture(T* ptr, int mip)
+		{
+			glGetTextureImageEXT(m_id, m_target, mip, m_format, m_type, ptr);
+		}
+
 
 	private:
 

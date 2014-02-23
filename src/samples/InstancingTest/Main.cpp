@@ -1,24 +1,18 @@
 #include "../GlutApp/GlutApp.h"
 #include "Rendering/BasicStructures/BufferObject.h"
+#include "Rendering/BasicStructures/Framebuffer.h"
 #include "Rendering/Shapes/ShapeGenerator.h"
 #include "Rendering/Shaders/Program.h"
 #include "Rendering/Shaders/Shader.h"
+#include "Rendering/Techniques/Rasterization/DeferredFramebuffer.h"
 #include "Math/Matrix.h"
-#include <random>
+
+#include "PatternGenerator.h"
+#include "SummedAreaTable.h"
 
 class InstancingApp : public oplo::GlutApp
 {
 public:
-
-	struct CubeData
-	{
-		float m_scale;
-		oplo::Vec3F m_translation;
-		oplo::Quat<float> m_rotation;
-		oplo::Vec4F m_color;
-	};
-
-	static_assert(sizeof(CubeData) == (sizeof(float)* 12), "Must have proper alignment");
 
 	class InstancingProgram : public oplo::Program
 	{
@@ -38,10 +32,10 @@ public:
 			vtxShader = std::make_shared<oplo::Shader>(oplo::Shader::VTX_SHADER, "InstancingVertex");
 			frgShader = std::make_shared<oplo::Shader>(oplo::Shader::FRAG_SHADER, "InstancingFragment");
 			vtxShader->addInline("#define VERTEX_SHADER");
-			vtxShader->addFile("../shaders/InstancingTest.glsl");
+			vtxShader->addFile("../data/shaders/InstancingTest.glsl");
 
 			frgShader->addInline("#define FRAGMENT_SHADER");
-			frgShader->addFile("../shaders/InstancingTest.glsl");
+			frgShader->addFile("../data/shaders/InstancingTest.glsl");
 
 			vtxShader->create();
 			frgShader->create();
@@ -69,13 +63,95 @@ public:
 		int m_normalLoc;
 	};
 
+
+	class CompositionProgram : public oplo::Program
+	{
+	public:
+
+		CompositionProgram() :
+			Program("CompositionProgram")
+		{}
+
+		void create()
+		{
+			std::shared_ptr<oplo::Shader> vtxShader, frgShader;
+			vtxShader = std::make_shared<oplo::Shader>(oplo::Shader::VTX_SHADER, "CompositionVertex");
+			frgShader = std::make_shared<oplo::Shader>(oplo::Shader::FRAG_SHADER, "CompositionFragment");
+			vtxShader->addInline("#define VERTEX_SHADER");
+			vtxShader->addFile("../data/shaders/DeferredComposition.glsl");
+
+			frgShader->addInline("#define FRAGMENT_SHADER");
+			frgShader->addFile("../data/shaders/DeferredComposition.glsl");
+
+			vtxShader->create();
+			frgShader->create();
+
+			addShader(vtxShader);
+			addShader(frgShader);
+
+			compile();
+		}
+	};
+
+	class FinalPassProgram : public oplo::Program
+	{
+	public:
+
+		FinalPassProgram() :
+			Program("FinalPassProgram")
+		{}
+
+		void create()
+		{
+			std::shared_ptr<oplo::Shader> vtxShader, frgShader;
+			vtxShader = std::make_shared<oplo::Shader>(oplo::Shader::VTX_SHADER, "CompositionVertex");
+			frgShader = std::make_shared<oplo::Shader>(oplo::Shader::FRAG_SHADER, "CompositionFragment");
+			vtxShader->addInline("#define VERTEX_SHADER");
+			vtxShader->addFile("../data/shaders/DeferredComposition.glsl");
+
+			//frgShader->addInline("#define BLUR_TO_SCREEN");
+			frgShader->addInline("#define COPY_TO_SCREEN");
+			frgShader->addFile("../data/shaders/DeferredComposition.glsl");
+
+			vtxShader->create();
+			frgShader->create();
+
+			addShader(vtxShader);
+			addShader(frgShader);
+
+			compile();
+		}
+	};
+
+
+	InstancingApp()
+	{}
+
 	virtual void initialize(bool initializeDebug = true) override
 	{
 		oplo::GlutApp::initialize(initializeDebug);
+
 		m_instancingProgram = std::make_shared<InstancingProgram>();
 		m_instancingProgram->create();
+
+		m_compositionProgram = std::make_shared<CompositionProgram>();
+		m_compositionProgram->create();
+
+		m_finalPassProgram = std::make_shared<FinalPassProgram>();
+		m_finalPassProgram->create();
+
 		m_uniforms.registerShader(m_instancingProgram);
+		m_uniforms.registerShader(m_compositionProgram);
+		m_uniforms.registerShader(m_finalPassProgram);
+
 		allocateCubes();
+		m_framebuffer.initialize(800, 600, 32);
+		m_framebuffer.validate();
+		m_sat.initialize(800, 600);
+		m_dof.initialize(800, 600);
+		m_camera.SetAperture(1);
+		m_camera.SetFocalLength(1);
+		m_camera.SetFocusDistance(50);
 	}
 
 	void shutdown()
@@ -83,11 +159,20 @@ public:
 		m_cubePositionBuffer.deallocate();
 		m_unitCube.deallocate();
 		m_instancingProgram->destroy();
+		m_compositionProgram->destroy();
+		m_finalPassProgram->destroy();
+		m_framebuffer.destroy();
 	}
 
 	virtual void draw() override
 	{
+		m_framebuffer.enableAll();
+		m_framebuffer.bind();
+		m_framebuffer.clear();
+
 		m_instancingProgram->bind();
+
+		glEnable(GL_DEPTH_TEST);
 
 		glEnableVertexAttribArray(m_instancingProgram->m_vertexLoc);
 		glEnableVertexAttribArray(m_instancingProgram->m_colorLoc);
@@ -99,9 +184,9 @@ public:
 		glVertexAttribPointer(m_instancingProgram->m_vertexLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 		glVertexAttribPointer(m_instancingProgram->m_normalLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)0 + 3 * sizeof(float));
 		glBindBuffer(GL_ARRAY_BUFFER, m_cubePositionBuffer.getId());
-		glVertexAttribPointer(m_instancingProgram->m_colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CubeData), (GLchar*)0 + offsetof(CubeData, m_color));
-		glVertexAttribPointer(m_instancingProgram->m_scaleAndTranslationLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CubeData), (GLchar*)0 + offsetof(CubeData, m_scale));
-		glVertexAttribPointer(m_instancingProgram->m_rotationLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CubeData), (GLchar*)0 + offsetof(CubeData, m_rotation));
+		glVertexAttribPointer(m_instancingProgram->m_colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(PatternGenerator::CubeData), (GLchar*)0 + offsetof(PatternGenerator::CubeData, m_color));
+		glVertexAttribPointer(m_instancingProgram->m_scaleAndTranslationLoc, 4, GL_FLOAT, GL_FALSE, sizeof(PatternGenerator::CubeData), (GLchar*)0 + offsetof(PatternGenerator::CubeData, m_scale));
+		glVertexAttribPointer(m_instancingProgram->m_rotationLoc, 4, GL_FLOAT, GL_FALSE, sizeof(PatternGenerator::CubeData), (GLchar*)0 + offsetof(PatternGenerator::CubeData, m_rotation));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glVertexAttribDivisor(m_instancingProgram->m_colorLoc, 1);
@@ -116,12 +201,44 @@ public:
 		glDisableVertexAttribArray(m_instancingProgram->m_rotationLoc);
 		glDisableVertexAttribArray(m_instancingProgram->m_normalLoc);
 		
-		m_instancingProgram->unbind();
+		GLenum lastBuffer[] = { GL_COLOR_ATTACHMENT2 };
+		m_framebuffer.enableBuffers(1, lastBuffer);
+
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_framebuffer.getAttachment(0).getId());
+		glBindMultiTextureEXT(GL_TEXTURE1, GL_TEXTURE_2D, m_framebuffer.getDepthBuffer().getId());
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, oplo::MakeScreenQuad());
+
+		glDisable(GL_DEPTH_TEST);
+
+		m_compositionProgram->bind();
+		
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		m_sat.generateFor(m_framebuffer.getAttachment(0));
+		float cocScale, cocBias;
+		m_camera.GetDepthOfFieldParams(cocScale, cocBias);
+
+		m_dof.generate(cocScale, cocBias, m_framebuffer.getDepthBuffer(), m_framebuffer.getAttachment(0));
+		glBindMultiTextureEXT(GL_TEXTURE2, GL_TEXTURE_2D, m_dof.get().getId());
+		glBindMultiTextureEXT(GL_TEXTURE3, GL_TEXTURE_2D, m_sat.get().getId());
+		m_finalPassProgram->bind();
+		//glUniform2f(1, cocScale, cocBias);
+
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		glDisableVertexAttribArray(0);
+		glUseProgram(0);
 	}
 
 	void allocateCubes(unsigned numCubes = 7500)
 	{
-		m_numCubes = numCubes * 6;
+		//int pattern = PatternGenerator::CUBE_SPIRAL;
+		int pattern = PatternGenerator::CUBE_JUNGLE;
+		m_numCubes = m_patterns.getTotalAllocations(pattern, numCubes);
 
 		m_unitCube.deallocate();
 		m_unitCube.create("CubeBuffer");
@@ -129,7 +246,7 @@ public:
 
 		m_cubePositionBuffer.deallocate();
 		m_cubePositionBuffer.create("CubePositionBuffer");
-		m_cubePositionBuffer.allocate(GL_ARRAY_BUFFER, m_numCubes *  sizeof(CubeData), GL_MAP_WRITE_BIT, 0, true);
+		m_cubePositionBuffer.allocate(GL_ARRAY_BUFFER, m_numCubes *  sizeof(PatternGenerator::CubeData), GL_MAP_WRITE_BIT, 0, true);
 
 		m_unitCube.map(GL_WRITE_ONLY);
 		oplo::MakeCube(oplo::Vec3F(-1, -1, -1), oplo::Vec3F(1, 1, 1), m_unitCube.getMappedPointer<float>(), 6);
@@ -139,199 +256,73 @@ public:
 		m_cubePositionBuffer.map(GL_WRITE_ONLY);
 
 		{
-			CubeData* cubes = m_cubePositionBuffer.getMappedPointer<CubeData>();
-
-			std::random_device rd;
-			std::mt19937 twister(rd());
-			std::uniform_real_distribution<float> translation(-200, 200);
-			std::uniform_real_distribution<float> rotation(0, 360);
-			std::uniform_real_distribution<float> axisRange(-1, 1);
-			std::uniform_real_distribution<float> color(0, 1);
-			std::uniform_real_distribution<float> scale(0.5, 5);
-
-			oplo::Vec4F colorV;
-
-			colorV.setXyzw(255 / 255., 243 / 255., 0 / 255., 1);
-			for (int i = 0; i < numCubes; ++i)
-			{
-				double freqZ = 100;
-				double angleR = (i / double(numCubes - 1)) * (3.1415926 * 2);
-
-				oplo::Vec3F axis(axisRange(twister), axisRange(twister), axisRange(twister));
-				oplo::Anglef angle = oplo::Anglef::fromDeg(rotation(twister));
-				oplo::Vec3F l0(sin(angleR) * 200, cos(angleR) * 200, 0);
-
-				float ct = 0.1f * axisRange(twister);
-
-				cubes[i].m_translation = l0;
-				cubes[i].m_scale = scale(twister);
-				cubes[i].m_color = colorV + ct;
-				cubes[i].m_rotation.fromAxisAngle(angle, axis);
-			}
-
-			colorV.setXyzw(124 / 255., 93 / 255., 178 / 255., 1);
-			for (int i = numCubes, j = 0; i < numCubes * 2; ++i, ++j)
-			{
-				double phaseOffset = 0; // (3.1415926 * 2) / 3;
-				double angleR = (j / double(numCubes - 1)) * (3.1415926 * 2);
-				double angleN = ((j + 1) / double(numCubes - 1)) * (3.1415926 * 2);
-
-				oplo::Vec3F axis(axisRange(twister), axisRange(twister), axisRange(twister));
-				oplo::Anglef angle = oplo::Anglef::fromDeg(rotation(twister));
-
-				oplo::Vec3F tmp0(sin(angleR), cos(angleR), 0);
-				tmp0.normalize();
-
-				oplo::Vec3F tmp1(sin(angleN), cos(angleN), 0);
-				tmp1.normalize();
-
-				oplo::Vec3F l0 = tmp0 * 50.f;
-				oplo::Vec3F l1 = tmp1 * 50.f;
-
-				oplo::Vec3F l = l1 - l0;
-				l.normalize();
-
-				oplo::Quat<float> q;
-				q.fromAxisAngle(oplo::Angle<float>(( angleR) * 17), l);
-				q.normalize();
-
-				oplo::Vec3F d2(0, 0, 1);
-
-				d2 = oplo::TransformVector(q, d2);
-
-				float ct = 0.1f * axisRange(twister);
-
-				cubes[i].m_translation = d2 * 200.f + l0;
-				cubes[i].m_scale = d2[2] < 0 ? 1.f : 0.f;
-				cubes[i].m_color = colorV + ct;
-				cubes[i].m_rotation.fromAxisAngle(angle, axis);
-			}
-
-			//colorV.setXyzw(109 / 255., 25 / 255., 255 / 255., 1);
-			colorV.setXyzw(25 / 255., 109 / 255., 255 / 255., 1);
-			for (int i = numCubes * 2, j = 0; i < numCubes * 3; ++i, ++j)
-			{
-				double phaseOffset = 0; // (3.1415926 * 2) / 3;
-				double angleR = (j / double(numCubes - 1)) * (3.1415926 * 2);
-				double angleN = ((j + 1) / double(numCubes - 1)) * (3.1415926 * 2);
-
-				oplo::Vec3F axis(axisRange(twister), axisRange(twister), axisRange(twister));
-				oplo::Anglef angle = oplo::Anglef::fromDeg(rotation(twister));
-
-				oplo::Vec3F tmp0(sin(angleR), cos(angleR), 0);
-				tmp0.normalize();
-
-				oplo::Vec3F tmp1(sin(angleN), cos(angleN), 0);
-				tmp1.normalize();
-
-				oplo::Vec3F l0 = tmp0 * 125.f;
-				oplo::Vec3F l1 = tmp1 * 125.f;
-
-				oplo::Vec3F l = l1 - l0;
-				l.normalize();
-
-				oplo::Quat<float> q;
-				q.fromAxisAngle(oplo::Angle<float>((phaseOffset + angleR) * 17), l);
-				q.normalize();
-
-				oplo::Vec3F d2(0, 0, 1);
-				d2 = oplo::TransformVector(q, d2);
-				d2.normalize();
-
-				float ct = 0.1f * axisRange(twister);
-
-				cubes[i].m_translation = d2 * 30.f + l0;
-				cubes[i].m_scale = 2.f;
-				cubes[i].m_color = colorV + ct;
-				cubes[i].m_rotation.fromAxisAngle(angle, axis);
-			}
-
-			colorV.setXyzw(93 / 255., 0 / 255., 255 / 255., 1);
-			for (int i = numCubes * 3, j=0; i < numCubes * 4; ++i, ++j)
-			{
-				double phaseOffset = 0; // (3.1415926 * 2) / 3;
-				double angleR = (j / double(numCubes - 1)) * (3.1415926 * 2);
-				double angleN = ((j+1) / double(numCubes - 1)) * (3.1415926 * 2);
-
-				oplo::Vec3F axis(axisRange(twister), axisRange(twister), axisRange(twister));
-				oplo::Anglef angle = oplo::Anglef::fromDeg(rotation(twister));
-
-				oplo::Vec3F tmp0(sin(angleR), cos(angleR), 0);
-				tmp0.normalize();
-
-				oplo::Vec3F tmp1(sin(angleN), cos(angleN), 0);
-				tmp1.normalize();
-
-				oplo::Vec3F l0 = tmp0 * 50.f;
-				oplo::Vec3F l1 = tmp1 * 50.f;
-
-				oplo::Vec3F l = l1 - l0;
-				l.normalize();
-
-				oplo::Quat<float> q;
-				q.fromAxisAngle(oplo::Angle<float>((phaseOffset * 2 + angleR) * 7), l);
-				q.normalize();
-
-				oplo::Vec3F d2(0, 0, 1)
-					;
-				d2 = oplo::TransformVector(q, d2);
-
-				float ct = 0.1f * axisRange(twister);
-
-				cubes[i].m_translation = d2 * 20.f + l0;
-				cubes[i].m_scale = 1.f; // scale(twister);
-				cubes[i].m_color = colorV + ct;
-				cubes[i].m_rotation.fromAxisAngle(angle, axis);
-			}
-
-			colorV.setXyzw(1, 0.7, 0, 1);
-			for (int i = numCubes * 4; i < numCubes * 5; ++i)
-			{
-				double freqZ = 100;
-				double angleR = (i / double(numCubes - 1)) * (3.1415926 * 2);
-
-				oplo::Vec3F axis(axisRange(twister), axisRange(twister), axisRange(twister));
-				oplo::Anglef angle = oplo::Anglef::fromDeg(rotation(twister));
-				oplo::Vec3F l0(sin(angleR) * 125, cos(angleR) * 125, 0);
-
-				float ct = 0.1f * axisRange(twister);
-
-				cubes[i].m_translation = l0;
-				cubes[i].m_scale = scale(twister);
-				cubes[i].m_color = colorV + ct;
-				cubes[i].m_rotation.fromAxisAngle(angle, axis);
-			}
-
-			colorV.setXyzw(1, 76 / 255., 0, 1);
-			for (int i = numCubes * 5; i < numCubes * 6; ++i)
-			{
-				double freqZ = 100;
-				double angleR = (i / double(numCubes - 1)) * (3.1415926 * 2);
-
-				oplo::Vec3F axis(axisRange(twister), axisRange(twister), axisRange(twister));
-				oplo::Anglef angle = oplo::Anglef::fromDeg(rotation(twister));
-				oplo::Vec3F l0(sin(angleR) * 50, cos(angleR) * 50, 0);
-
-				float ct = 0.1f * axisRange(twister);
-
-				cubes[i].m_translation = l0;
-				cubes[i].m_scale = scale(twister);
-				cubes[i].m_color = colorV + ct;
-				cubes[i].m_rotation.fromAxisAngle(angle, axis);
-			}
+			m_patterns.fillBuffer(m_cubePositionBuffer.getMappedPointer<PatternGenerator::CubeData>(), pattern, numCubes);
 		}
 
 		m_cubePositionBuffer.unmap();
 	}
 
+	virtual void resize(int w, int h)
+	{
+		oplo::GlutApp::resize(w, h);
+		m_framebuffer.resize(w, h);
+		m_sat.resize(w, h);
+		m_dof.resize(w, h);
+	}
+
+	virtual void keyEvent(unsigned char key, int x, int y)
+	{
+		bool overriden = false;
+
+		switch (key)
+		{
+		case 'a':
+			m_camera.SetAperture(m_camera.GetAperture() + 0.01);
+			overriden = true;
+			break;
+		case 'A':
+			m_camera.SetAperture(m_camera.GetAperture() - 0.01);
+			overriden = true;
+			break;
+		case 'f':
+			m_camera.SetFocalLength(m_camera.GetFocalLength() + 0.5);
+			overriden = true;
+			break;
+		case 'F':
+			m_camera.SetFocalLength(m_camera.GetFocalLength() - 0.5);
+			overriden = true;
+			break;
+		case 'd':
+			m_camera.SetFocusDistance(m_camera.GetFocusDistance() + 1);
+			overriden = true;
+			break;
+		case 'D':
+			m_camera.SetFocusDistance(m_camera.GetFocusDistance() - 1);
+			overriden = true;
+			break;
+		default:
+			break;
+		}
+
+		if (!overriden)
+			oplo::GlutApp::keyEvent(key, x, y);
+	}
+
+
 private:
 
 	unsigned m_numCubes;
 	std::shared_ptr<InstancingProgram> m_instancingProgram;
+	std::shared_ptr<CompositionProgram> m_compositionProgram;
+	std::shared_ptr<FinalPassProgram> m_finalPassProgram;
 
+	PatternGenerator m_patterns;
+	oplo::SummedAreaTable m_sat;
+	oplo::RectangleBoundaries m_dof;
 	oplo::BufferObject m_unitCube;
 	oplo::BufferObject m_cubePositionBuffer;
 
+	oplo::DeferredFramebuffer m_framebuffer;
 } g_app;
 
 

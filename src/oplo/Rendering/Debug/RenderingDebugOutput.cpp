@@ -142,6 +142,37 @@ const char* RenderingDebugOutput::severityToString(GLenum e) const
 	}
 }
 
+void ObjectLabel(GLenum identifier, GLuint name, GLsizei size, const char* label)
+{
+	if (GLEW_KHR_debug)
+	{
+		glObjectLabel(identifier, name, size, label);
+	}
+}
+
+void DebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, const char* fmt, ...)
+{
+	if (GLEW_KHR_debug)
+	{
+		char buf[256];
+		va_list arglist;
+		va_start(arglist, fmt);
+		vsnprintf_s(buf, 256, fmt, arglist);
+		va_end(arglist);
+
+		glDebugMessageInsert(source, type, id, severity, -1, buf);
+	}
+}
+
+void DebugMessageS(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg )
+{
+	if (GLEW_KHR_debug)
+	{
+		glDebugMessageInsert(source, type, id, severity, -1, msg);
+	}
+}
+
+
 void  PrimaryDebugFunc(
 	GLenum source,
 	GLenum type,
