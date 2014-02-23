@@ -146,11 +146,51 @@ namespace oplo
 		return m_projectionDirty;
 	}
 
+	void Camera::SetAperture(float a)
+	{
+		m_aperture = a;
+		UpdateDepthOfField();
+	}
+
+	void Camera::SetFocalLength(float f)
+	{
+		m_focalLength = f;
+		UpdateDepthOfField();
+	}
+
+	void Camera::SetFocusDistance(float d)
+	{
+		m_planeInFocus = d;
+		UpdateDepthOfField();
+	}
+
+	float Camera::GetAperture() const
+	{
+		return m_aperture;
+	}
+
+	float Camera::GetFocalLength() const
+	{
+		return m_focalLength;
+	}
+
+	float Camera::GetFocusDistance() const
+	{
+		return m_planeInFocus;
+	}
+
+	void Camera::GetDepthOfFieldParams(float& cocScale, float& cocBias) const
+	{
+		cocScale = m_cocScale ;
+		cocBias = m_cocBias;
+	}
+
 	void Camera::Update()
 	{
 		if (m_projectionDirty)
 		{
 			MakePerspectiveMatrix();
+			UpdateDepthOfField();
 		}
 
 		if (m_viewDirty || m_projectionDirty)
@@ -168,6 +208,12 @@ namespace oplo
 
 		m_viewDirty = false;
 		m_projectionDirty = false;
+	}
+
+	void Camera::UpdateDepthOfField()
+	{
+		m_cocScale = (m_aperture * m_focalLength * m_planeInFocus * (m_farPlane - m_nearPlane)) / ((m_planeInFocus - m_focalLength) * m_nearPlane * m_farPlane);
+		m_cocBias = (m_aperture * m_focalLength * (m_nearPlane - m_planeInFocus)) / ((m_planeInFocus * m_focalLength) * m_nearPlane);
 	}
 
 	void Camera::UpdateClippingPlanes()

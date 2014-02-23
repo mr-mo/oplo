@@ -10,6 +10,9 @@
 namespace oplo
 {
 
+	//This has too many responsibilities
+	//Break it apart
+	//Make stuff like aperture, etc. components?
 	class Camera
 	{
 	public:
@@ -89,9 +92,26 @@ namespace oplo
 
 		bool ProjectionDirty() const;
 
+		//Todo: make me separable
+		void SetAperture(float aperture);
+
+		void SetFocalLength(float f);
+
+		void SetFocusDistance(float d);
+
+		float GetAperture() const;
+
+		float GetFocalLength() const;
+
+		float GetFocusDistance() const;
+
+		void GetDepthOfFieldParams(float& cocScale, float& cocBias) const;
+
 		void Update();
 
 	private:
+
+		void UpdateDepthOfField();
 
 		void UpdateClippingPlanes();
 
@@ -118,6 +138,12 @@ namespace oplo
 
 		int m_viewport[4];
 		float m_inverseViewport[2];
+
+		float m_aperture;
+		float m_focalLength;
+		float m_planeInFocus;
+		float m_cocScale;
+		float m_cocBias;
 
 		Angle<float> m_fov;
 		Vec3D m_frustumPoints[8];

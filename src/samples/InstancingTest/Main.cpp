@@ -109,7 +109,8 @@ public:
 			vtxShader->addInline("#define VERTEX_SHADER");
 			vtxShader->addFile("../data/shaders/DeferredComposition.glsl");
 
-			frgShader->addInline("#define BLUR_TO_SCREEN");
+			//frgShader->addInline("#define BLUR_TO_SCREEN");
+			frgShader->addInline("#define COPY_TO_SCREEN");
 			frgShader->addFile("../data/shaders/DeferredComposition.glsl");
 
 			vtxShader->create();
@@ -147,6 +148,10 @@ public:
 		m_framebuffer.initialize(800, 600, 32);
 		m_framebuffer.validate();
 		m_sat.initialize(800, 600);
+		m_dof.initialize(800, 600);
+		m_camera.SetAperture(1);
+		m_camera.SetFocalLength(1);
+		m_camera.SetFocusDistance(50);
 	}
 
 	void shutdown()
@@ -200,6 +205,7 @@ public:
 		m_framebuffer.enableBuffers(1, lastBuffer);
 
 		glBindTexture(GL_TEXTURE_2D_ARRAY, m_framebuffer.getAttachment(0).getId());
+		glBindMultiTextureEXT(GL_TEXTURE1, GL_TEXTURE_2D, m_framebuffer.getDepthBuffer().getId());
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, oplo::MakeScreenQuad());
@@ -213,8 +219,14 @@ public:
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		m_sat.generateFor(m_framebuffer.getAttachment(0));
-		glBindMultiTextureEXT(GL_TEXTURE2, GL_TEXTURE_2D, m_sat.get().getId());
+		float cocScale, cocBias;
+		m_camera.GetDepthOfFieldParams(cocScale, cocBias);
+
+		m_dof.generate(cocScale, cocBias, m_framebuffer.getDepthBuffer(), m_framebuffer.getAttachment(0));
+		glBindMultiTextureEXT(GL_TEXTURE2, GL_TEXTURE_2D, m_dof.get().getId());
+		glBindMultiTextureEXT(GL_TEXTURE3, GL_TEXTURE_2D, m_sat.get().getId());
 		m_finalPassProgram->bind();
+		//glUniform2f(1, cocScale, cocBias);
 
 		glDrawArrays(GL_QUADS, 0, 4);
 
@@ -224,7 +236,9 @@ public:
 
 	void allocateCubes(unsigned numCubes = 7500)
 	{
-		m_numCubes = m_patterns.getTotalAllocations(PatternGenerator::CUBE_JUNGLE, numCubes);
+		//int pattern = PatternGenerator::CUBE_SPIRAL;
+		int pattern = PatternGenerator::CUBE_JUNGLE;
+		m_numCubes = m_patterns.getTotalAllocations(pattern, numCubes);
 
 		m_unitCube.deallocate();
 		m_unitCube.create("CubeBuffer");
@@ -242,7 +256,7 @@ public:
 		m_cubePositionBuffer.map(GL_WRITE_ONLY);
 
 		{
-			m_patterns.fillBuffer(m_cubePositionBuffer.getMappedPointer<PatternGenerator::CubeData>(), PatternGenerator::CUBE_JUNGLE, numCubes);
+			m_patterns.fillBuffer(m_cubePositionBuffer.getMappedPointer<PatternGenerator::CubeData>(), pattern, numCubes);
 		}
 
 		m_cubePositionBuffer.unmap();
@@ -253,6 +267,7 @@ public:
 		oplo::GlutApp::resize(w, h);
 		m_framebuffer.resize(w, h);
 		m_sat.resize(w, h);
+		m_dof.resize(w, h);
 	}
 
 	virtual void keyEvent(unsigned char key, int x, int y)
@@ -261,7 +276,29 @@ public:
 
 		switch (key)
 		{
-		case 's':
+		case 'a':
+			m_camera.SetAperture(m_camera.GetAperture() + 0.01);
+			overriden = true;
+			break;
+		case 'A':
+			m_camera.SetAperture(m_camera.GetAperture() - 0.01);
+			overriden = true;
+			break;
+		case 'f':
+			m_camera.SetFocalLength(m_camera.GetFocalLength() + 0.5);
+			overriden = true;
+			break;
+		case 'F':
+			m_camera.SetFocalLength(m_camera.GetFocalLength() - 0.5);
+			overriden = true;
+			break;
+		case 'd':
+			m_camera.SetFocusDistance(m_camera.GetFocusDistance() + 1);
+			overriden = true;
+			break;
+		case 'D':
+			m_camera.SetFocusDistance(m_camera.GetFocusDistance() - 1);
+			overriden = true;
 			break;
 		default:
 			break;
@@ -281,7 +318,7 @@ private:
 
 	PatternGenerator m_patterns;
 	oplo::SummedAreaTable m_sat;
-
+	oplo::RectangleBoundaries m_dof;
 	oplo::BufferObject m_unitCube;
 	oplo::BufferObject m_cubePositionBuffer;
 

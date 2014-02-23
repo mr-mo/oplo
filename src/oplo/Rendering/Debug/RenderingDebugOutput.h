@@ -15,7 +15,7 @@ namespace oplo
 	{
 	public:
 
-		RenderingDebugOutput(std::function<void(const std::string&)> f = [](const std::string& str) { std::cout << str << std::endl; });
+		RenderingDebugOutput(std::function<void(const std::string&)> f = [](const std::string& str) { std::cout << str << std::endl; __debugbreak();  });
 
 		~RenderingDebugOutput();
 
