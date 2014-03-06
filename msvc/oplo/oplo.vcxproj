@@ -130,6 +130,7 @@
     <ClCompile Include="..\..\src\oplo\Camera\Camera.cpp" />
     <ClCompile Include="..\..\src\oplo\Camera\EulerCameraController.cpp" />
     <ClCompile Include="..\..\src\oplo\Containers\Utility\MortonCode.cpp" />
+    <ClCompile Include="..\..\src\oplo\Containers\Utility\TokenizeString.cpp" />
     <ClCompile Include="..\..\src\oplo\DataFormats\LAS\LAS.cpp" />
     <ClCompile Include="..\..\src\oplo\Profiling\CPUInformation.cpp" />
     <ClCompile Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.cpp" />
@@ -153,8 +154,10 @@
     <ClInclude Include="..\..\src\oplo\Containers\LinearOctree\LinearOctree.h" />
     <ClInclude Include="..\..\src\oplo\Containers\LinearOctree\MinimalOctree.h" />
     <ClInclude Include="..\..\src\oplo\Containers\Utility\MortonCode.h" />
+    <ClInclude Include="..\..\src\oplo\Containers\Utility\TokenizeString.h" />
     <ClInclude Include="..\..\src\oplo\DataFormats\LAS\LAS.h" />
     <ClInclude Include="..\..\src\oplo\DataFormats\LAS\LASStructures.h" />
+    <ClInclude Include="..\..\src\oplo\DataFormats\OBJ\ObjReader.h" />
     <ClInclude Include="..\..\src\oplo\Math\AABB.h" />
     <ClInclude Include="..\..\src\oplo\Math\Angle.h" />
     <ClInclude Include="..\..\src\oplo\Math\Constants.h" />
@@ -165,6 +168,7 @@
     <ClInclude Include="..\..\src\oplo\Profiling\CPUInformation.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\Chrono\ChronoStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\GPU\GPUStopwatch.h" />
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\Prof\ProfStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTscp\RdTscpStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.h" />

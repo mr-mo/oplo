@@ -2,16 +2,17 @@
 #include <Profiling/Timers/RdTsc/RdTscStopwatch.h>
 #include <Profiling/Timers/RdTscp/RdTscpStopwatch.h>
 #include <Profiling/Timers/QPC/QPCStopwatch.h>
+#include <Profiling/Timers/Prof/ProfStopwatch.h>
 #include <Profiling/CPUInformation.h>
 #include <Containers/HashMap/HashMap.h>
 #include <Math/Vector.h>
 #include <iostream>
 #include <unordered_map>
 
-void printValues(const __int64* diff, const int loopCounter)
+void printValues( volatile __int64* diff, const int loopCounter)
 {
 	__int64 minV = diff[0], maxV = diff[0];
-	double avg = 0;
+	double avg = diff[0];
 
 	for (int i = 1; i < loopCounter; ++i)
 	{
@@ -24,7 +25,7 @@ void printValues(const __int64* diff, const int loopCounter)
 	avg /= loopCounter;
 	double stdDev = 0;
 
-	for (int i = 1; i < loopCounter; ++i)
+	for (int i = 0; i < loopCounter; ++i)
 	{
 		__int64 d = diff[i]; // -diff[i - 1];
 		stdDev += (d - avg) * (d - avg);
@@ -33,56 +34,45 @@ void printValues(const __int64* diff, const int loopCounter)
 	stdDev /= loopCounter;
 	stdDev = sqrt(stdDev);
 
-	printf("Test: %f avg time, %f sigma, %I64i min %I64i max\n", avg, stdDev, minV, maxV);
-
+	std::cout << "\tAverage time taken to query: " << avg << std::endl;
+	std::cout << "\tMinimum time taken to query: " << minV << std::endl;
+	std::cout << "\tMaximum time taken to query: " << maxV << std::endl;
 }
 
 
 #include <type_traits>
+#include <iomanip>
 
 template<int idx, typename Func>
-void approximateResolution(Func f, const int loopCounter = 1000000)
+void approximateResolution(Func f, const int loopCounter = 5000000)
 {
 	typedef typename std::result_of_t<Func()> dataType;
-	dataType* storage = new dataType[loopCounter];
-	__int64* diffs = new __int64[loopCounter];
+	volatile dataType* storage = new dataType[loopCounter];
+	volatile __int64* diffs = new __int64[loopCounter];
 
-	RdTscStopwatch tsc;
+	ProfStopwatch tsc;
+	oplo::QPCStopwatch qpc;
+	//__int64 overhead = std::numeric_limits<__int64>::max();
+	//tsc.start();
+	//for (int i = 0; i < loopCounter; ++i)
+	//{
 
-	__int64 overhead = std::numeric_limits<__int64>::max();
+	//	diffs[i] = tsc.runningDiff();
+	//	storage[i] = i;
+	//	diffs[i] = tsc.runningDiff() - diffs[i]; // -RdTscStopwatch::getOverhead();
+	//	overhead = overhead < diffs[i] ? overhead : diffs[i];
+	//}
 
-	tsc.start();
+
+	qpc.start();
 	for (int i = 0; i < loopCounter; ++i)
 	{
-
-		diffs[i] = tsc.runningDiff();
-		tsc.serialize();
-		//client code
-
-		storage[i] = i;
-
-		tsc.serialize();
-		diffs[i] = tsc.runningDiff() - diffs[i]; // -RdTscStopwatch::getOverhead();
-		overhead = overhead < diffs[i] ? overhead : diffs[i];
-	}
-
-	for (int i = 0; i < loopCounter; ++i)
-	{
-		diffs[i] = tsc.runningDiff();
-		tsc.serialize();
-
+		tsc.start();
 		storage[i] = f();
-
-		tsc.serialize();
-		diffs[i] = tsc.runningDiff() - diffs[i];
+		tsc.stop();
+		diffs[i] = tsc.diff(); // tsc.pollE();
 	}
-
-	for (int i = 0; i < loopCounter; ++i)
-	{
-		diffs[i] -= overhead;
-	}
-
-	std::cout << "Overhead: " << overhead << std::endl;
+	qpc.stop();
 
 	tsc.stop();
 
@@ -91,10 +81,12 @@ void approximateResolution(Func f, const int loopCounter = 1000000)
 	int totalChanges = 0;
 	__int64 change = 0;
 	__int64 averageChange = 0;
+	__int64 relativeChange = 0;
 	for (int i = 0; i < loopCounter; ++i)
 	{
 		if (storage[i] != storage[istart])
 		{
+			relativeChange += storage[i] - storage[istart];
 			istart = i;
 			++totalChanges;
 		}
@@ -103,7 +95,14 @@ void approximateResolution(Func f, const int loopCounter = 1000000)
 	}
 
 	printValues(diffs, loopCounter);
-	std::cout << "Average ticks per change: " << change / (double)totalChanges << std::endl;
+
+	std::cout << "\tAverage ticks elapsed per change: " << change / (double)totalChanges << std::endl;
+	std::cout << "\tTotal Changes: " << totalChanges << std::endl;
+	std::cout << "\tTotal Time: " << qpc.diffMS() << std::endl;
+	std::cout << "\tFunctional Resolution (NumberChanges/Time): " << std::setprecision(20) << totalChanges / ((qpc.diffMS()) / 1000) << std::endl;
+	std::cout << "\tFunctional Accuracy (SumChanges/Time): " << std::setprecision(20) << relativeChange / ((qpc.diffMS()) / 1000) << std::endl;
+	std::cout << std::endl << std::endl;
+
 
 	delete[] diffs;
 	delete[] storage;
@@ -126,19 +125,63 @@ struct Functor
 
 int main()
 {
+	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+
 	CPUInformation info;
 	info.setup();
 	info.printInfo();
+	oplo::QPCStopwatch::initialize();
 
 	SystemTimeWatch systemWatch;
 	HighResWatch highResWatch;
 	SteadyWatch steadyWatch;
 	RdTscStopwatch rdTsc;
-	QPCStopwatch qpc;
+	oplo::QPCStopwatch qpc;
 	RdTscpStopwatch rdTscp;
+	ProfStopwatch intelSW;
+
+	LARGE_INTEGER li;
+	LARGE_INTEGER fcount;
+	QueryPerformanceFrequency(&fcount);
+	std::cout << "QPC Freq: " << fcount.QuadPart << std::endl << std::endl << std::endl;
 
 
-	static const int totalIterations = 500000;
+	FILETIME ft;
+
+	std::cout << "Intel Query:" << std::endl;
+	approximateResolution<10>([&intelSW]() {
+		return intelSW.poll();
+	});
+
+	std::cout << "QPC:" << std::endl;
+	approximateResolution<7>([&qpc]() {
+		return qpc.poll();
+	});
+
+	std::cout << "std::system_clock:" << std::endl;
+	approximateResolution<1>([&systemWatch](){
+		return systemWatch.poll();
+	});
+
+	std::cout << "std::high_resolution_clock:" << std::endl;
+	approximateResolution<2>([&highResWatch](){
+		return highResWatch.poll();
+	});
+
+	std::cout << "std::steady_clock:" << std::endl;
+	approximateResolution<3>([&steadyWatch](){
+		return steadyWatch.poll();
+	});
+
+	std::cout << "GetSystemTimeAsFileTime" << std::endl;
+	approximateResolution<6>([&ft, &li]() {
+		GetSystemTimeAsFileTime(&ft);
+		li.HighPart = ft.dwHighDateTime;
+		li.LowPart = ft.dwLowDateTime;
+		return li.QuadPart;
+	});
+
 
 	//unsigned* testArray0 = new unsigned[totalIterations];
 	//unsigned* testArray1 = new unsigned[totalIterations];
@@ -204,66 +247,20 @@ int main()
 	//rdTsc.stop();
 	//std::cout << "Time find: " << rdTsc.diff() << std::endl;
 
-	LARGE_INTEGER li;
-	LARGE_INTEGER fcount;
-	QueryPerformanceFrequency(&fcount);
 
-	QueryPerformanceCounter(&li);
-	long long t = _Xtime_get_ticks();
-	__int64 tsc = __rdtsc();
+	//approximateResolution<8>([&rdTscp]() {
+	//	return rdTscp.poll();
+	//});
 
-	__int64 test = 2530000000 / fcount.QuadPart;
+	SYSTEMTIME st;
 
-	__int64 data0 = rdTsc.poll();
-	__int64 data1 = rdTsc.poll();
-
-	//runLoop<0>([&rdTsc]() { rdTsc.poll(); });
-	//runLoop<1>([&systemWatch](){ systemWatch.poll(); });
-	//runLoop<2>([&highResWatch](){ highResWatch.poll(); });
-	//runLoop<3>([&steadyWatch](){ steadyWatch.poll(); });
-	//runLoop<4>([&li](){ QueryPerformanceCounter(&li); });
-	//runLoop<5>([](){ _Xtime_get_ticks(); });
-
-	FILETIME ft;
-
-	approximateResolution<0>([&rdTsc]() { 
-		return rdTsc.poll(); 
-	});
-
-	approximateResolution<1>([&systemWatch](){ 
-		return systemWatch.poll(); 
-	});
-	
-	approximateResolution<2>([&highResWatch](){ 
-		return highResWatch.poll(); 
-	});
-	
-	approximateResolution<3>([&steadyWatch](){ 
-		return steadyWatch.poll(); 
-	});
-	
-	approximateResolution<4>([&li]() { 
-		QueryPerformanceCounter(&li); return li.QuadPart; 
-	});
-	
-	approximateResolution<5>([]() { 
-		return _Xtime_get_ticks(); 
-	});
-	
-	approximateResolution<6>([&ft, &li]() {
-		GetSystemTimeAsFileTime(&ft);
-		li.HighPart = ft.dwHighDateTime;
-		li.LowPart = ft.dwLowDateTime;
-		return li.QuadPart;
-	});
-
-	approximateResolution<7>([&qpc]() {
-		return qpc.poll();
-	});
-
-	approximateResolution<8>([&rdTscp]() {
-		return rdTscp.poll();
-	});
+	//approximateResolution<9>([&st, &ft, &li]() {
+	//	GetSystemTime(&st);
+	//	SystemTimeToFileTime(&st, &ft);
+	//	li.HighPart = ft.dwHighDateTime;
+	//	li.LowPart = ft.dwLowDateTime;
+	//	return li.QuadPart;
+	//});
 
 
 	std::cin.get();

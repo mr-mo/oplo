@@ -88,7 +88,7 @@ namespace oplo
 		unsigned getTarget() const;
 
 		template<typename T>
-		void fetchTexture(T* ptr, int mip)
+		void fetchTexture(T* ptr, int mip) const
 		{
 			glGetTextureImageEXT(m_id, m_target, mip, m_format, m_type, ptr);
 		}

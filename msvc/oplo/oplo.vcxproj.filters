@@ -79,14 +79,14 @@
     <Filter Include="Source Files\Rendering\Queries">
       <UniqueIdentifier>{c70de96b-4178-436c-9bdd-c2619001f6b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Rendering\Techniques">
-      <UniqueIdentifier>{7c0e8e62-a16c-469c-bc03-c95d23dab964}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Rendering\Techniques\Rasterization">
-      <UniqueIdentifier>{f43fcdda-db9a-499c-af16-9dc34727bb2a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Profiling\Timers\GPU">
       <UniqueIdentifier>{dda86153-7944-48b7-95de-1d663f53242f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataFormats\OBJ">
+      <UniqueIdentifier>{0ba98b2c-8d1e-4d3a-885a-59d392ef152c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiling\Timers\Prof">
+      <UniqueIdentifier>{de262b6c-5378-485f-8ea7-540a515741a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +142,10 @@
       <Filter>Source Files\Profiling\Timers\QPC</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\oplo\Rendering\Techniques\Rasterization\DeferredFramebuffer.cpp">
-      <Filter>Source Files\Rendering\Techniques\Rasterization</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Containers\Utility\TokenizeString.cpp">
+      <Filter>Source Files\Containers\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +241,27 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\Containers\LinearOctree\MinimalOctree.h">
       <Filter>Source Files\Containers\LinearOctree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Queries\QueryObject.h">
+      <Filter>Source Files\Rendering\Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\GPU\GPUStopwatch.h">
+      <Filter>Source Files\Profiling\Timers\GPU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\Framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\Techniques\Rasterization\DeferredFramebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\DataFormats\OBJ\ObjReader.h">
+      <Filter>Source Files\DataFormats\OBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Containers\Utility\TokenizeString.h">
+      <Filter>Source Files\Containers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Profiling\Timers\Prof\ProfStopwatch.h">
+      <Filter>Source Files\Profiling\Timers\Prof</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -86,6 +86,15 @@ struct Constants<double>
 	}
 };
 
+//From boost
+template<typename T> 
+std::size_t hashCombine(T in, std::size_t seed)
+{
+	std::hash<T> hasher;
+	seed ^= hasher(in) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	return seed;
+}
+
 }
 
 #endif
