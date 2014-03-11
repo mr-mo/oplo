@@ -139,6 +139,7 @@
     <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\TextureBufferObject.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.cpp" />
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\VAO.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Program.cpp" />
     <ClCompile Include="..\..\src\oplo\Rendering\Shaders\Shader.cpp" />
@@ -172,11 +173,13 @@
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\QPC\QPCStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTscp\RdTscpStopwatch.h" />
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\RdTsc\RdTscStopwatch.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\BufferDescriptor.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\BufferObject.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\Framebuffer.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\GPUFence.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureBufferObject.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\TextureDescriptor.h" />
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\VAO.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Debug\RenderingDebugOutput.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\oploGL.h" />
     <ClInclude Include="..\..\src\oplo\Rendering\Queries\QueryObject.h" />

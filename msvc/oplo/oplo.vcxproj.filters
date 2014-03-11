@@ -147,6 +147,9 @@
     <ClCompile Include="..\..\src\oplo\Containers\Utility\TokenizeString.cpp">
       <Filter>Source Files\Containers\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\oplo\Rendering\BasicStructures\VAO.cpp">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\oplo\Camera\Camera.h">
@@ -262,6 +265,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\oplo\Profiling\Timers\Prof\ProfStopwatch.h">
       <Filter>Source Files\Profiling\Timers\Prof</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\BufferDescriptor.h">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oplo\Rendering\BasicStructures\VAO.h">
+      <Filter>Source Files\Rendering\BasicStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

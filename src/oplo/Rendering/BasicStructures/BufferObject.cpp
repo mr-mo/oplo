@@ -10,7 +10,7 @@ BufferObject::BufferObject() : m_id(0), m_pointer(0)
 
 BufferObject::~BufferObject()
 {
-	assert(!m_id);
+	deallocate();
 }
 
 void BufferObject::create(const char* label /*= 0*/)
